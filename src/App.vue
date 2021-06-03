@@ -46,75 +46,80 @@ export default {
   },
 
   data: () => ({
-    datasets: [
-        {fillColor: "rgba(220,220,220,0.2)",
-          strokeColor: "rgba(220,220,220,1)",
-          data: [65, 59, 80, 81, 56, 55, 40]
-        },
-        {fillColor: "rgba(151,187,205,0.2)",
-          strokeColor: "rgba(151,187,205,1)",
-          data: [28, 48, 40, 19, 86, 27, 90]
-        },
-        {fillColor: "rgba(151,187,205,0.2)",
-          strokeColor: "rgba(151,187,205,1)",
-          data: [8, 41, 40, 19, 6, 27, 0]
-        },
-        {fillColor: "rgba(151,187,205,0.2)",
-          strokeColor: "rgba(151,187,205,1)",
-          data: [0, -3, 40, 1, 86, 7, 90]
-        }
-    ],
-    timeseriesData: [[1,2,3,4],[2,3,1,3]]
+    datasets: [],
+    // timeseriesData: [[1,2,3,4],[2,3,1,3]]
     //
   }),
   mounted(){
+    this.$store.state.resultData = []
     this.$store.state.timeseriesData = data;
     // console.log(this.$store.state.timeseriesData)
-    // this.classifyData()
+    this.classifyData()
+    console.log(this.datasets)
   },
   methods:{
     classifyData(){
       for (var i in this.timeseriesData){
         var data = this.timeseriesData[i]
         const result = {
+          insert: false,
           sido: null,
           sigungu: null,
           year: [],
           data: {
-            'number': [],
-            'full':   [],
-            'rate':   []
+            'number': [], // 입학자수
+            'full':   [], // 입학정원
+            'rate':   [] // 비율 충원률
           }
         }
         for (var key in data){
-            if (key=='index'){
-              var sigungu = data[key].split('|')[1]
-              result['sigungu'] = sigungu
-            }
-            else if (key.split('|').length == 2){
-              var [year, name] = key.split('|')
-              result['year'].push(year)
-              if (name == '입학정원'){
-                result.data['full'].push(data[key])
+            if (data['시도'] == '강원'){ // 나중 선택시 바꾸는 식으로 함수 변경 필요
+              result.insert = true;
+              if (key=='index'){
+                var sigungu = data[key].split('|')[1]
+                result['sigungu'] = sigungu
               }
-              else if (name == '입학자수'){
-                result.data['number'].push(data[key])
+              else if (key.split('|').length == 2){
+                var [year, name] = key.split('|')
+                if (!result['year'].includes(year)){
+                  result['year'].push(year)
+                }
+                
+                if (name == '입학정원'){
+                  result.data['full'].push(data[key])
+                }
+                else if (name == '입학자수'){
+                  result.data['number'].push(data[key])
+                }
+                else if (name == 'rate'){
+                  result.data['rate'].push(data[key])
+                }
               }
-              else if (name == 'rate'){
-                result.data['rate'].push(data[key])
+              else{
+                var sido = data[key];
+                result['sido']=sido
               }
             }
-            else{
-              var sido = data[key];
-              result['sido']=sido
-            }
-            if (data['시도'] == '경기'){
-              this.$store.state.resultData.push(result)
-            }
-          
           
         }
+        if (result.insert) {
+            console.log(result)
+            this.$store.state.resultData.push(result);
+          }
         
+        
+      }
+    }
+  },
+  watch:{
+    numberData: function(){
+    console.log(this.$store.state.resultData)
+      for (var i in this.$store.state.resultData){
+        this.datasets.push({
+          fillColor: "rgba(220,220,220,0.2)",
+          strokeColor: "rgba(220,220,220,1)",
+          data: this.$store.state.resultData[i].data.rate
+        })
       }
     }
   },
@@ -125,9 +130,9 @@ export default {
     sido(){
       return this.$store.state.sido
     },
-    // timeseriesData() {
-    //     return this.$store.state.timeseriesData;
-    // },
+    timeseriesData() {
+        return this.$store.state.timeseriesData;
+    },
     chartOptions() {
       return {
           responsive: true,
