@@ -1,7 +1,7 @@
 import { Line } from 'vue-chartjs'
 export default {
   extends: Line,
-  props: ['chartdata', 'options', 'title', 'labels', 'sido','sigungu'],
+  props: ['chartdata', 'options', 'title', 'labels'],
   mounted () {
     this.renderPieChart(this.chartdata, this.options)
   },
@@ -12,14 +12,14 @@ export default {
   },
   methods:{
     renderPieChart: function() {
-        this.options.title.text = this.sido+this.sigungu
-      this.renderChart(
-        {
-          labels: this.labels,
-          datasets: this.chartData
-        },
-        this.options
-      );      
+        this.options.title.text += ' 지역별 입학자수/입학정원'
+        this.renderChart(
+          {
+            labels: this.labels,
+            datasets: this.chartData
+          },
+          this.options
+        );      
     }
   },
   watch: {

@@ -1,7 +1,6 @@
 <template>
   <v-app>
     <Header />
-    
 
     <v-main>
       <v-container class="container" fluid  grid-list-md>
@@ -18,7 +17,7 @@
         <v-layout no-gutters wrap class="home-layout">
           <v-flex xs10 sm10 md10 >
             <v-card class="pa-3">
-            <line-chart  :chartdata="datasets" :options="chartOptions" :labels="[2016,2017,2018,2019,2020]" class='chart-graph' />
+            <line-chart  :chartdata="datasets" :options="chartOptions" :title="title" :labels="[2016,2017,2018,2019,2020]" class='chart-graph' />
             </v-card>
           </v-flex>
         </v-layout>
@@ -47,15 +46,15 @@ export default {
 
   data: () => ({
     datasets: [],
-    // timeseriesData: [[1,2,3,4],[2,3,1,3]]
-    //
-  }),
+    title: null,
+    colors: ['#E93B81', '#F5ABC9','#FFE5E2','#B6C9F0','#FBC6A4','#F4A9A8','#CE97B0','#AFB9CB',
+      '#907FA4', '#A58FAA','#A6D6D6', '#A7BBC7','#8E9775','#4A503D'
+    ]
+    }),
   mounted(){
     this.$store.state.resultData = []
     this.$store.state.timeseriesData = data;
-    // console.log(this.$store.state.timeseriesData)
     this.classifyData()
-    console.log(this.datasets)
   },
   methods:{
     classifyData(){
@@ -74,6 +73,7 @@ export default {
         }
         for (var key in data){
             if (data['시도'] == '강원'){ // 나중 선택시 바꾸는 식으로 함수 변경 필요
+              this.title = '강원'
               result.insert = true;
               if (key=='index'){
                 var sigungu = data[key].split('|')[1]
@@ -103,7 +103,6 @@ export default {
           
         }
         if (result.insert) {
-            console.log(result)
             this.$store.state.resultData.push(result);
           }
         
@@ -113,12 +112,12 @@ export default {
   },
   watch:{
     numberData: function(){
-    console.log(this.$store.state.resultData)
       for (var i in this.$store.state.resultData){
         this.datasets.push({
-          fillColor: "rgba(220,220,220,0.2)",
-          strokeColor: "rgba(220,220,220,1)",
-          data: this.$store.state.resultData[i].data.rate
+          borderColor: this.colors[i],
+          backgroundColor: "rgba(0,0,0,0)",
+          data: this.$store.state.resultData[i].data.rate,
+          label: this.$store.state.resultData[i].sigungu
         })
       }
     }
@@ -139,7 +138,7 @@ export default {
           maintainAspectRatio: false,
           title: {
               display: true,
-              text: 'default',
+              text: this.title,
           },
           legend: {
               position: 'bottom'
@@ -147,6 +146,11 @@ export default {
           tooltip: {
               enabled: true
           },
+          elements: {
+            line: {
+                tension: 0
+            }
+        }
       }
     }
   }
