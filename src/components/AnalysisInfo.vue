@@ -14,6 +14,10 @@
             <v-card-subtitle class="explain_modal_text">
                 <v-chip  class="ma-1" v-for="(i, key) in minusList" :key="key" small outlined>{{ i }}</v-chip>
             </v-card-subtitle>
+            <v-card-subtitle class="explain_modal_head">변화율 평균</v-card-subtitle>
+            <v-card-subtitle class="explain_modal_text">
+                <v-chip  class="ma-1"  small outlined>{{ lean }}</v-chip>
+            </v-card-subtitle>
         </v-card>
     </v-menu>
 </template>
@@ -21,7 +25,8 @@
 export default {
     props:{
         plusList: Array,
-        minusList: Array
+        minusList: Array,
+        lean: Number,
     },
     data() {
         return{

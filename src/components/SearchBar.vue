@@ -89,6 +89,7 @@ export default {
             colors: ['#E93B81', '#F5ABC9','#FFE5E2','#B6C9F0','#FBC6A4','#F4A9A8','#CE97B0','#AFB9CB',
               '#907FA4', '#A58FAA','#A6D6D6', '#A7BBC7','#8E9775','#4A503D'
             ],
+            
         }
     },
     computed:{
@@ -197,12 +198,15 @@ export default {
         var plusCountRecent =0
         var avgPlusArea=[], avgMinusArea=[];
         var recentPlusArea=[], recentMinusArea  = [];
+        var allLeanAvg = 0, allLeanRecent=0, cnt=0;
         for (i in this.$store.state.statisticsData){
             var data = this.$store.state.statisticsData[i].data;
             var sigungu = this.$store.state.statisticsData[i].sigungu;
-            var leanAvg = data[0]-data[4] // 5년간 평균 변화율
-            var leanRecent = data[3]-data[4] // 1년간 변화율
-            if (leanAvg >0) { // 평균 변화율 감소 ? why?
+            var leanAvg = data[4]-data[0] // 5년간 평균 변화율
+            var leanRecent = data[4]-data[3] // 1년간 변화율
+            allLeanAvg += leanAvg;
+            allLeanRecent+=leanRecent;
+            if (leanAvg <0) { // 평균 변화율 감소 ? why?
               minusCountAvg+=1
               avgMinusArea.push(sigungu)
             }
@@ -210,7 +214,7 @@ export default {
               plusCountAvg+=1
               avgPlusArea.push(sigungu)
             }
-            if (leanRecent >0) { // 평균 변화율 감소
+            if (leanRecent <0) { // 평균 변화율 감소
               minusCountRecent+=1
               recentMinusArea.push(sigungu)
             }
@@ -218,11 +222,12 @@ export default {
               plusCountRecent+=1
               recentPlusArea.push(sigungu)
             }
-
+          cnt+=1
         }
         this.analysisData.push({
           dataAvg: [plusCountAvg, minusCountAvg],
           dataRecent: [plusCountRecent, minusCountRecent],
+          lean: [allLeanAvg/cnt, allLeanRecent/cnt],
           labels: {
             avgPlus: avgPlusArea,
             avgMinus: avgMinusArea,

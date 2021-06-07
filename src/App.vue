@@ -10,67 +10,67 @@
         </v-layout>
       </v-container>
       <v-container fluid grid-list-md >
-        <v-layout no-gutters wrap class="home-layout"  >
+        <v-layout no-gutters wrap class="home-layout"  v-if="!selected" >
+          <before-select :contents="numberContents" />
+        </v-layout>
+        <v-layout no-gutters wrap class="home-layout" v-else >
           <v-flex  xs12 sm8 md8 >
             <v-card class="pa-3" >
-              <bar-chart v-if="selected" 
+              <bar-chart
               :chartdata="statisticsChartData" 
               :options="barChartOptions" 
               :title="title+' (입학자수 - 입학정원)'" 
               :labels="label" 
               class='bar-chart-graph' :height="436" />
-              <before-select v-else :contents="numberContents" />
             </v-card>
           </v-flex>
           <v-flex  xs6 sm2 md2 >
             <v-card class="pa-3" >
-              <analysis-info v-if="selected" 
+              <analysis-info 
               :plusList="analysisData[0].labels.avgPlus" 
-              :minusList="analysisData[0].labels.avgMinus" />
-              <pie-chart v-if="selected" 
+              :minusList="analysisData[0].labels.avgMinus"
+              :lean="analysisData[0].lean[0]" />
+              <pie-chart 
               :chartdata="analysisData[0].dataAvg" 
               :options="barChartOptions" 
               :title="title+' 행정구 분석 통계'" 
               :labels="['평균변화율증가','평균변화율감소']" 
               class='bar-chart-graph' />
-              
             </v-card>
           </v-flex>
           <v-flex  xs6 sm2 md2 >
             <v-card class="pa-3" >
-              <analysis-info v-if="selected" 
+              <analysis-info 
               :plusList="analysisData[0].labels.recentPlus" 
-              :minusList="analysisData[0].labels.recentMinus" />
+              :minusList="analysisData[0].labels.recentMinus" 
+              :lean="analysisData[0].lean[1]" />
 
-              <pie-chart v-if="selected" 
+              <pie-chart 
               :chartdata="analysisData[0].dataRecent" 
               :options="barChartOptions" 
               :title="title+' 행정구 분석 통계'" 
               :labels="['최근변화율증가','최근변화율감소']" 
               class='bar-chart-graph' />
             </v-card>
+            
           </v-flex>
       
       
-            <v-flex  xs12 sm12 md10 >
-              <v-card class="pa-3" >
-                <line-chart v-if="selected" 
+            <v-flex  xs12 sm4 md4 >
+              <v-card class="pa-3"  >
+                <line-chart 
                 :chartdata="datasets.rate" 
                 :options="chartOptions" 
                 :title="title" 
                 :labels="label" 
                 class='chart-graph' />
-                <before-select v-else :contents="rateContents" />
+                
               </v-card>
           </v-flex>
-        </v-layout>
-      </v-container>
-      <v-divider />
-      <!-- 입학정원 , 입학자수 차트 -->
-        <v-container fluid grid-list-md id="raw-data" >
-          <v-layout no-gutters wrap class="home-layout"  >
-            <v-flex  xs12 sm12 md5 >
-              <v-card class="pa-3"  v-if="selected" >
+
+
+            <v-flex  xs12 sm4 md4 >
+              <v-card class="pa-3"  >
                 <bar-chart  
                 :chartdata="datasets.full" 
                 :options="barChartOptions" 
@@ -78,12 +78,10 @@
                 :labels="label" 
                 class='bar-chart-graph' />
               </v-card>
-              <!-- <v-card class="pa-3" height="300" v-else >
-                <before-select :contents="fullContents" />
-              </v-card> -->
+
             </v-flex>
-            <v-flex  xs12 sm12 md5 >
-              <v-card class="pa-3" v-if="selected"  >
+            <v-flex  xs12 sm4 md4 >
+              <v-card class="pa-3"  >
                 <bar-chart 
                 :chartdata="datasets.number" 
                 :options="barChartOptions" 
@@ -91,9 +89,6 @@
                 :labels="label" 
                 class='bar-chart-graph' />
               </v-card>
-              <!-- <v-card class="pa-3" height="300" v-else >
-                <before-select :contents="numberContents" />
-              </v-card> -->
             </v-flex>
         
             
@@ -130,9 +125,6 @@ export default {
   },
 
   data: () => ({
-    colors: ['#E93B81', '#F5ABC9','#FFE5E2','#B6C9F0','#FBC6A4','#F4A9A8','#CE97B0','#AFB9CB',
-      '#907FA4', '#A58FAA','#A6D6D6', '#A7BBC7','#8E9775','#4A503D'
-    ],
     numberContents: '각 시도의 행정구역별 대학 입학자수 총합의 5년간 추이를 나타냅니다',
     rateContents:   '각 시도의 행정구역별 대학 입학정원 대비 입학자수(입학자수/입학정원)의 5년간 추이를 나타냅니다',
     fullContents:   '각 시도의 행정구역별 대학 입학정원 총합의 5년간 추이를 나타냅니다',
