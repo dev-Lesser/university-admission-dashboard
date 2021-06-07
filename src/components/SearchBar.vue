@@ -1,6 +1,6 @@
 <template>
 
-<v-autocomplete
+    <v-autocomplete
             v-model="model"
             :items="items"
             outlined
@@ -31,8 +31,8 @@ export default {
         }
     },
     computed:{
-      seleted(){
-        return this.$store.state.seleted;
+      selected(){
+        return this.$store.state.selected;
       },
       loading(){
           return this.$store.state.loading
@@ -58,7 +58,7 @@ export default {
     },
     watch: {
       model (val) {
-        this.$store.state.seleted =true; // 시도 선택시 true
+        this.$store.state.selected =true; // 시도 선택시 true
         this.sido = val;
         this.classifyData()
       },
@@ -82,10 +82,9 @@ export default {
             label: this.$store.state.resultData[i].sigungu
           })
         }
-        // console.log(this.$store.state.datasets.full)
         for (i in this.fullData){
           var statData = []
-          for (var idx in 5){
+          for (var idx=0;idx<5;idx++){
             var [full, number] = [this.fullData[i].data.full[idx], this.numberData[i].data.number[idx]]
             var level = number - full // 음수면 미달, 양수면 성황
             statData.push(level)
@@ -124,6 +123,8 @@ export default {
     },
     methods: {
       clearVariables(){
+        this.$store.state.statisticsData =[]
+        this.$store.state.statisticsChartData = []
         this.$store.state.datasets = {
               'rate': [],
               'full': [],

@@ -3,19 +3,18 @@
     <Header />
 
     <v-main>
-      <v-container class="container" fluid  grid-list-md>
+      <v-container class="container" fluid  grid-list-sm>
         <v-layout no-gutters wrap class="home-layout">
-          <v-flex xs12 sm6 md6>
+          <v-flex xs6 sm6 md6>
             <search-bar />
-          </v-flex>
+          </v-flex>         
         </v-layout>
       </v-container>
       <v-container fluid grid-list-md >
         <v-layout no-gutters wrap class="home-layout"  >
           <v-flex  xs12 sm12 md10 >
-            <v-col  :cols="12" >
-              <v-card class="pa-3" >
-                <line-chart v-if="seleted" 
+              <v-card class="pa-3" height="300">
+                <line-chart v-if="selected" 
                 :chartdata="datasets.rate" 
                 :options="chartOptions" 
                 :title="title" 
@@ -23,42 +22,53 @@
                 class='chart-graph' />
                 <before-select v-else :contents="rateContents" />
               </v-card>
-            </v-col>
           </v-flex>
-            <v-col  sm=12 md=5 lg=5>
-              <v-card class="pa-3" >
-                <bar-chart v-if="seleted" 
-                :chartdata="datasets.full" 
-                :options="barChartOptions" 
-                :title="title" 
-                :labels="label" 
-                class='bar-chart-graph' />
-                <before-select v-else :contents="fullContents" />
-              </v-card>
-            </v-col>
-            <v-col sm=12 md=5 lg=5 >
-              <v-card class="pa-3" >
-                <bar-chart v-if="seleted" 
-                :chartdata="datasets.number" 
-                :options="barChartOptions" 
-                :title="title" 
-                :labels="label" 
-                class='bar-chart-graph' />
-                <before-select v-else :contents="numberContents" />
-              </v-card>
-            </v-col>
-        </v-layout>
-        <v-col sm=12 md=5 lg=5 >
-              <v-card class="pa-3" >
-                <bar-chart v-if="seleted" 
+          <v-flex  xs12 sm12 md10 >
+              <v-card class="pa-3" height=300>
+                <bar-chart v-if="selected" 
                 :chartdata="statisticsChartData" 
                 :options="barChartOptions" 
-                :title="title" 
+                :title="'(입학자수 - 입학정원)'" 
                 :labels="label" 
                 class='bar-chart-graph' />
                 <before-select v-else :contents="numberContents" />
               </v-card>
-            </v-col>
+            </v-flex>
+        </v-layout>
+      </v-container>
+      <v-divider />
+      <!-- 입학정원 , 입학자수 차트 -->
+        <v-container fluid grid-list-md id="raw-data" >
+          <v-layout no-gutters wrap class="home-layout"  >
+            <v-flex  xs12 sm12 md5 >
+              <v-card class="pa-3" height="300" v-if="selected" >
+                <bar-chart  
+                :chartdata="datasets.full" 
+                :options="barChartOptions" 
+                :title="title+' 입학정원'" 
+                :labels="label" 
+                class='bar-chart-graph' />
+              </v-card>
+              <!-- <v-card class="pa-3" height="300" v-else >
+                <before-select :contents="fullContents" />
+              </v-card> -->
+            </v-flex>
+            <v-flex  xs12 sm12 md5 >
+              <v-card class="pa-3" height="300" v-if="selected"  >
+                <bar-chart 
+                :chartdata="datasets.number" 
+                :options="barChartOptions" 
+                :title="title + ' 입학자수'" 
+                :labels="label" 
+                class='bar-chart-graph' />
+              </v-card>
+              <!-- <v-card class="pa-3" height="300" v-else >
+                <before-select :contents="numberContents" />
+              </v-card> -->
+            </v-flex>
+        
+            
+          </v-layout>
       </v-container>
       
     </v-main>
@@ -93,8 +103,10 @@ export default {
     numberContents: '각 시도의 행정구역별 대학 입학자수 총합의 5년간 추이를 나타냅니다',
     rateContents:   '각 시도의 행정구역별 대학 입학정원 대비 입학자수(입학자수/입학정원)의 5년간 추이를 나타냅니다',
     fullContents:   '각 시도의 행정구역별 대학 입학정원 총합의 5년간 추이를 나타냅니다',
-    label: [2016,2017,2018,2019,2020]
+    label: [2016,2017,2018,2019,2020],
+    showRaw: false,
     }),
+    
   mounted(){
     this.$store.state.resultData = []
     this.$store.state.timeseriesData = data;
@@ -102,8 +114,9 @@ export default {
   
  
   computed:{
-    seleted(){
-      return this.$store.state.seleted;
+    
+    selected(){
+      return this.$store.state.selected;
     },
     title(){
       return this.$store.state.title;
@@ -113,7 +126,6 @@ export default {
       return this.$store.state.datasets;
     },
     statisticsData(){
-      console.log(this.$store.state.statisticsData)
       return this.$store.state.statisticsData;
     },  
     statisticsChartData(){
@@ -150,7 +162,7 @@ export default {
               text: this.title,
           },
           legend: {
-              position: 'bottom'
+              position: 'left'
           },
           tooltip: {
               enabled: true
@@ -161,9 +173,8 @@ export default {
     
   },
   watch:{
-      statisticsChartData: function(val){
-        console.log(val)
-      }
+      // statisticsChartData: function(val){
+      // }
     }
 };
 </script>
@@ -178,7 +189,9 @@ export default {
 
 }
 .chart-graph{
+  height: 250px;
 }
 .bar-chart-graph{
+  height: 250px;
 }
 </style>
