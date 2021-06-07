@@ -1,74 +1,124 @@
 <template>
-<v-expansion-panels>
-    <v-expansion-panel>
-    <v-expansion-panel-header>
-        행정구역 검색
-    </v-expansion-panel-header>
-    <v-expansion-panel-content>
-        
-            <v-autocomplete
-              v-model="title"
-              :disabled="loading"
-              :items="sido"
-              chips
-              color="blue-grey lighten-2"
-              label="행정구역"
-              item-text="name"
-              item-value="name"
-            >
-              <template v-slot:selection="data">
-                <v-chip
-                  v-bind="data.attrs"
-                  :input-value="data.selected"
-                  close
-                  @click="data.select"
-                  @click:close="remove(data.item)"
-                >
-                  
-                  
-                </v-chip>
-              </template>
-              <template v-slot:item="data">
-                <template v-if="typeof data.item !== 'object'">
-                  <v-list-item-content v-text="data.item"></v-list-item-content>
-                </template>
-                <template v-else>
-                  
-                  <v-list-item-content>
-                    <v-list-item-title v-html="data.item.name"></v-list-item-title>
-                  </v-list-item-content>
-                </template>
-              </template>
-            </v-autocomplete>
-    </v-expansion-panel-content>
-    </v-expansion-panel>
-</v-expansion-panels>
+
+<v-autocomplete
+            v-model="model"
+            :items="items"
+            outlined
+            dense
+            chips
+            small-chips
+            label="행정구역을 선택하세요"
+            chip
+            color="black"
+            prepend-icon="mdi-magnify"
+          ></v-autocomplete>
 </template>
 <script>
 export default {
     data() {
         return {
             title: true,
-            friends:['서울','경기'],
-            sido: [
-            { name: '서울', },
-            { name: '경기', },
-            { name: '대전',},
-            { name: '인천', },
+            items: [
+              '서울', '부산', '대구', '인천', '광주',' 대전','울산','세종','경기','강원','충북', '충남',
+              '전북', '전남', '경북', '경남', '제주'
+            ],
+            model: null,
+            sido: null,
+            colors: ['#E93B81', '#F5ABC9','#FFE5E2','#B6C9F0','#FBC6A4','#F4A9A8','#CE97B0','#AFB9CB',
+              '#907FA4', '#A58FAA','#A6D6D6', '#A7BBC7','#8E9775','#4A503D'
             ]
         }
     },
     computed:{
         loading(){
             return this.$store.state.loading
+        },
+        numberData(){
+          return this.$store.state.resultData;
+        },
+        timeseriesData() {
+            return this.$store.state.timeseriesData;
+        },
+        datasets(){
+          return this.$store.state.datasets
         }
     },
-    methods: {
-      remove (item) {
-          console.log(item)
-        const index = this.friends.indexOf(item.name)
-        if (index >= 0) this.friends.splice(index, 1)
+    watch: {
+      model (val) {
+        
+        this.sido = val;
+        this.classifyData()
       },
+      numberData: function(){
+        for (var i in this.$store.state.resultData){
+          this.$store.state.datasets.push({
+            borderColor: this.colors[i],
+            backgroundColor: "rgba(0,0,0,0)",
+            data: this.$store.state.resultData[i].data.rate,
+            label: this.$store.state.resultData[i].sigungu
+          })
+        }
+      }
+    },
+    methods: {
+      clearVariables(){
+        this.$store.state.datasets = []
+        this.$store.state.resultData = []
+        this.$store.state.title = ''
+      },
+      classifyData(){
+        this.clearVariables();
+        for (var i in this.timeseriesData){
+          var data = this.timeseriesData[i]
+          const result = {
+            insert: false,
+            sido: null,
+            sigungu: null,
+            year: [],
+            data: {
+              'number': [], // 입학자수
+              'full':   [], // 입학정원
+              'rate':   [] // 비율 충원률
+            }
+          }
+        for (var key in data){
+            if (data['시도'] == this.sido){ // 나중 선택시 바꾸는 식으로 함수 변경 필요
+              this.$store.state.title = this.sido
+              result.insert = true;
+              if (key=='index'){
+                var sigungu = data[key].split('|')[1]
+                result['sigungu'] = sigungu
+              }
+              else if (key.split('|').length == 2){
+                var [year, name] = key.split('|')
+                if (!result['year'].includes(year)){
+                  result['year'].push(year)
+                }
+                
+                if (name == '입학정원'){
+                  result.data['full'].push(data[key])
+                }
+                else if (name == '입학자수'){
+                  result.data['number'].push(data[key])
+                }
+                else if (name == 'rate'){
+                  result.data['rate'].push(data[key])
+                }
+              }
+              else{
+                var sido = data[key];
+                result['sido']=sido
+              }
+            }
+          
+        }
+        if (result.insert) {
+            this.$store.state.resultData.push(result);
+          }
+        
+        
+      }
+    }
     },
         
     

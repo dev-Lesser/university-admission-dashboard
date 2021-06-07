@@ -12,7 +12,7 @@ export default {
   },
   methods:{
     renderPieChart: function() {
-        this.options.title.text += ' 지역별 입학자수/입학정원'
+        this.options.title.text = this.title + ' 지역별 입학자수/입학정원'
         this.renderChart(
           {
             labels: this.labels,
