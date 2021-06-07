@@ -27,7 +27,7 @@ export default {
             sido: null,
             colors: ['#E93B81', '#F5ABC9','#FFE5E2','#B6C9F0','#FBC6A4','#F4A9A8','#CE97B0','#AFB9CB',
               '#907FA4', '#A58FAA','#A6D6D6', '#A7BBC7','#8E9775','#4A503D'
-            ]
+            ],
         }
     },
     computed:{
@@ -50,7 +50,10 @@ export default {
           return this.$store.state.timeseriesData;
       },
       datasets(){
-        return this.$store.state.datasets
+        return this.$store.state.datasets;
+      },
+      statisticsData(){
+        return this.$store.state.statisticsData;
       }
     },
     watch: {
@@ -79,6 +82,21 @@ export default {
             label: this.$store.state.resultData[i].sigungu
           })
         }
+        // console.log(this.$store.state.datasets.full)
+        for (i in this.fullData){
+          var statData = []
+          for (var idx in 5){
+            var [full, number] = [this.fullData[i].data.full[idx], this.numberData[i].data.number[idx]]
+            var level = number - full // 음수면 미달, 양수면 성황
+            statData.push(level)
+          }
+          this.$store.state.statisticsData.push({
+              sido    : this.fullData[i].sido,
+              sigungu : this.fullData[i].sigungu,
+              data    : statData,
+              year    : this.fullData[i].year
+            });
+        }
         this.$store.state.loading = false
       },
       rateData: function(){
@@ -90,8 +108,18 @@ export default {
             label: this.$store.state.resultData[i].sigungu
           })
         }
+        
         this.$store.state.loading = false
-        console.log(this.$store.state.datasets)
+      },
+      statisticsData: function(){
+        for (var i in this.$store.state.statisticsData){
+            this.$store.state.statisticsChartData.push({
+              borderColor: this.colors[i],
+              backgroundColor: this.colors[i],
+              data: this.$store.state.statisticsData[i].data,
+              label: this.$store.state.statisticsData[i].sigungu
+          })
+        }
       }
     },
     methods: {

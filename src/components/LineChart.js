@@ -24,8 +24,6 @@ export default {
   },
   watch: {
     chartdata: function() {
-      // this._chart.destroy();
-      //this.renderChart(this.data, this.options);
       this.renderPieChart();
     }
   }

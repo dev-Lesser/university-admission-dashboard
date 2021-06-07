@@ -15,26 +15,50 @@
           <v-flex  xs12 sm12 md10 >
             <v-col  :cols="12" >
               <v-card class="pa-3" >
-                <line-chart v-if="seleted" :chartdata="datasets.rate" :options="chartOptions" :title="title" :labels="[2016,2017,2018,2019,2020]" class='chart-graph' />
+                <line-chart v-if="seleted" 
+                :chartdata="datasets.rate" 
+                :options="chartOptions" 
+                :title="title" 
+                :labels="label" 
+                class='chart-graph' />
                 <before-select v-else :contents="rateContents" />
               </v-card>
             </v-col>
-            
-            
           </v-flex>
             <v-col  sm=12 md=5 lg=5>
               <v-card class="pa-3" >
-                <bar-chart v-if="seleted" :chartdata="datasets.full" :options="barChartOptions" :title="title" :labels="[2016,2017,2018,2019,2020]" class='bar-chart-graph' />
+                <bar-chart v-if="seleted" 
+                :chartdata="datasets.full" 
+                :options="barChartOptions" 
+                :title="title" 
+                :labels="label" 
+                class='bar-chart-graph' />
                 <before-select v-else :contents="fullContents" />
               </v-card>
             </v-col>
             <v-col sm=12 md=5 lg=5 >
               <v-card class="pa-3" >
-                <bar-chart v-if="seleted" :chartdata="datasets.number" :options="barChartOptions" :title="title" :labels="[2016,2017,2018,2019,2020]" class='bar-chart-graph' />
+                <bar-chart v-if="seleted" 
+                :chartdata="datasets.number" 
+                :options="barChartOptions" 
+                :title="title" 
+                :labels="label" 
+                class='bar-chart-graph' />
                 <before-select v-else :contents="numberContents" />
               </v-card>
             </v-col>
         </v-layout>
+        <v-col sm=12 md=5 lg=5 >
+              <v-card class="pa-3" >
+                <bar-chart v-if="seleted" 
+                :chartdata="statisticsChartData" 
+                :options="barChartOptions" 
+                :title="title" 
+                :labels="label" 
+                class='bar-chart-graph' />
+                <before-select v-else :contents="numberContents" />
+              </v-card>
+            </v-col>
       </v-container>
       
     </v-main>
@@ -68,7 +92,8 @@ export default {
     ],
     numberContents: '각 시도의 행정구역별 대학 입학자수 총합의 5년간 추이를 나타냅니다',
     rateContents:   '각 시도의 행정구역별 대학 입학정원 대비 입학자수(입학자수/입학정원)의 5년간 추이를 나타냅니다',
-    fullContents:   '각 시도의 행정구역별 대학 입학정원 총합의 5년간 추이를 나타냅니다'
+    fullContents:   '각 시도의 행정구역별 대학 입학정원 총합의 5년간 추이를 나타냅니다',
+    label: [2016,2017,2018,2019,2020]
     }),
   mounted(){
     this.$store.state.resultData = []
@@ -84,7 +109,15 @@ export default {
       return this.$store.state.title;
     },
     datasets(){
+      
       return this.$store.state.datasets;
+    },
+    statisticsData(){
+      console.log(this.$store.state.statisticsData)
+      return this.$store.state.statisticsData;
+    },  
+    statisticsChartData(){
+      return this.$store.state.statisticsChartData;
     },
   
     chartOptions() {
@@ -124,13 +157,14 @@ export default {
           },
           
       }
-    }
+    },
+    
   },
   watch:{
-    datasets: function(){
-      
+      statisticsChartData: function(val){
+        console.log(val)
+      }
     }
-  }
 };
 </script>
 <style scoped>
