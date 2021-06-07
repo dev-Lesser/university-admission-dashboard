@@ -174,7 +174,15 @@ export default {
       statisticsData: function(){
         for (var i in this.$store.state.statisticsData){
             this.$store.state.statisticsChartData.push({
+              type: 'line',
               borderColor: this.colors[i],
+              backgroundColor: 'rgba(0,0,0,0)',
+              data: this.$store.state.statisticsData[i].data,
+              label: this.$store.state.statisticsData[i].sigungu
+          })
+          this.$store.state.statisticsChartData.push({
+              type: 'bar',
+              // borderColor: this.colors[i],
               backgroundColor: this.colors[i],
               data: this.$store.state.statisticsData[i].data,
               label: this.$store.state.statisticsData[i].sigungu

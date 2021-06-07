@@ -5,15 +5,27 @@
     <v-main>
       <v-container class="container" fluid  grid-list-sm>
         <v-layout no-gutters wrap class="home-layout">
-          <v-flex xs6 sm6 md6>
+          <v-flex xs10 sm6 md6>
             <search-bar />
           </v-flex>         
         </v-layout>
       </v-container>
       <v-container fluid grid-list-md >
         <v-layout no-gutters wrap class="home-layout"  >
+          
           <v-flex  xs12 sm12 md10 >
-              <v-card class="pa-3" height="300">
+              <v-card class="pa-3" >
+                <bar-chart v-if="selected" 
+                :chartdata="statisticsChartData" 
+                :options="barChartOptions" 
+                :title="title+' (입학자수 - 입학정원)'" 
+                :labels="label" 
+                class='bar-chart-graph' :height="100" />
+                <before-select v-else :contents="numberContents" />
+              </v-card>
+            </v-flex>
+            <v-flex  xs12 sm12 md10 >
+              <v-card class="pa-3" >
                 <line-chart v-if="selected" 
                 :chartdata="datasets.rate" 
                 :options="chartOptions" 
@@ -23,17 +35,6 @@
                 <before-select v-else :contents="rateContents" />
               </v-card>
           </v-flex>
-          <v-flex  xs12 sm12 md10 >
-              <v-card class="pa-3" height=300>
-                <bar-chart v-if="selected" 
-                :chartdata="statisticsChartData" 
-                :options="barChartOptions" 
-                :title="'(입학자수 - 입학정원)'" 
-                :labels="label" 
-                class='bar-chart-graph' />
-                <before-select v-else :contents="numberContents" />
-              </v-card>
-            </v-flex>
         </v-layout>
       </v-container>
       <v-divider />
@@ -41,7 +42,7 @@
         <v-container fluid grid-list-md id="raw-data" >
           <v-layout no-gutters wrap class="home-layout"  >
             <v-flex  xs12 sm12 md5 >
-              <v-card class="pa-3" height="300" v-if="selected" >
+              <v-card class="pa-3"  v-if="selected" >
                 <bar-chart  
                 :chartdata="datasets.full" 
                 :options="barChartOptions" 
@@ -54,7 +55,7 @@
               </v-card> -->
             </v-flex>
             <v-flex  xs12 sm12 md5 >
-              <v-card class="pa-3" height="300" v-if="selected"  >
+              <v-card class="pa-3" v-if="selected"  >
                 <bar-chart 
                 :chartdata="datasets.number" 
                 :options="barChartOptions" 
@@ -141,7 +142,7 @@ export default {
               text: this.title,
           },
           legend: {
-              position: 'left'
+              position: 'bottom'
           },
           tooltip: {
               enabled: true
@@ -162,11 +163,16 @@ export default {
               text: this.title,
           },
           legend: {
-              position: 'left'
+              position: 'bottom'
           },
           tooltip: {
               enabled: true
           },
+          elements: {
+            line: {
+                tension: 0
+            }
+        }
           
       }
     },
@@ -189,9 +195,9 @@ export default {
 
 }
 .chart-graph{
-  height: 250px;
+  /* height: 250px; */
 }
 .bar-chart-graph{
-  height: 250px;
+  /* height: 250px; */
 }
 </style>
