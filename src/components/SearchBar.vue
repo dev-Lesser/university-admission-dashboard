@@ -4,6 +4,7 @@
             v-model="model"
             :items="items"
             outlined
+            :loading="loading"
             dense
             chips
             small-chips
@@ -30,43 +31,81 @@ export default {
         }
     },
     computed:{
-        loading(){
-            return this.$store.state.loading
-        },
-        numberData(){
-          return this.$store.state.resultData;
-        },
-        timeseriesData() {
-            return this.$store.state.timeseriesData;
-        },
-        datasets(){
-          return this.$store.state.datasets
-        }
+      seleted(){
+        return this.$store.state.seleted;
+      },
+      loading(){
+          return this.$store.state.loading
+      },
+      numberData(){
+        return this.$store.state.resultData;
+      },
+      fullData(){
+        return this.$store.state.resultData;
+      },
+      rateData(){
+        return this.$store.state.resultData;
+      },
+      timeseriesData() {
+          return this.$store.state.timeseriesData;
+      },
+      datasets(){
+        return this.$store.state.datasets
+      }
     },
     watch: {
       model (val) {
-        
+        this.$store.state.seleted =true; // 시도 선택시 true
         this.sido = val;
         this.classifyData()
       },
       numberData: function(){
         for (var i in this.$store.state.resultData){
-          this.$store.state.datasets.push({
+          this.$store.state.datasets['number'].push({
+            borderColor: this.colors[i],
+            backgroundColor: this.colors[i],
+            data: this.$store.state.resultData[i].data.number,
+            label: this.$store.state.resultData[i].sigungu
+          })
+        }
+        this.$store.state.loading = false
+      },
+      fullData: function(){
+        for (var i in this.$store.state.resultData){
+          this.$store.state.datasets.full.push({
+            borderColor: this.colors[i],
+            backgroundColor: this.colors[i],
+            data: this.$store.state.resultData[i].data.full,
+            label: this.$store.state.resultData[i].sigungu
+          })
+        }
+        this.$store.state.loading = false
+      },
+      rateData: function(){
+        for (var i in this.$store.state.resultData){
+          this.$store.state.datasets.rate.push({
             borderColor: this.colors[i],
             backgroundColor: "rgba(0,0,0,0)",
             data: this.$store.state.resultData[i].data.rate,
             label: this.$store.state.resultData[i].sigungu
           })
         }
+        this.$store.state.loading = false
+        console.log(this.$store.state.datasets)
       }
     },
     methods: {
       clearVariables(){
-        this.$store.state.datasets = []
+        this.$store.state.datasets = {
+              'rate': [],
+              'full': [],
+              'number':[]
+            },
         this.$store.state.resultData = []
         this.$store.state.title = ''
       },
       classifyData(){
+        this.$store.state.loading = true
         this.clearVariables();
         for (var i in this.timeseriesData){
           var data = this.timeseriesData[i]

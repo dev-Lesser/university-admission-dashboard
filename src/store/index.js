@@ -9,7 +9,12 @@ export default new Vuex.Store({
     timeseriesData: null,
     sido: null,
     resultData: [],
-    datasets:[],
+    seleted: false,
+    datasets:{
+      'rate': [],
+      'full': [],
+      'number':[]
+    },
     title: ''
   },
   mutations: {},
