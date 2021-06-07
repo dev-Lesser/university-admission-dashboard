@@ -1,27 +1,88 @@
 <template>
 
     <v-autocomplete
-            v-model="model"
-            :items="items"
-            outlined
-            :loading="loading"
-            dense
-            chips
-            small-chips
-            label="행정구역을 선택하세요"
-            chip
-            color="black"
-            prepend-icon="mdi-magnify"
-          ></v-autocomplete>
+      v-model="model"
+      :items="items"
+      outlined
+      :loading="loading"
+      dense
+      chips
+      small-chips
+      label="행정구역을 선택하세요"
+      chip
+      color="black"
+      prepend-icon="mdi-magnify"
+      item-text="name"
+      item-value="name"
+    >
+      <template v-slot:selection="data">
+        <v-chip
+          v-bind="data.attrs"
+          :input-value="data.selected"
+          small
+          outlined
+          color="blue-grey darken-3"
+          @click="data.select"
+        >
+          <v-avatar left>
+            <v-img :src="data.item.avatar"></v-img>
+          </v-avatar>
+          {{ data.item.name }}
+        </v-chip>
+      </template>
+      <template v-slot:item="data">
+          <template >
+            <v-list-item-avatar>
+              <img :src="data.item.avatar">
+            </v-list-item-avatar>
+            <v-list-item-content>
+              <v-list-item-title v-html="data.item.name"></v-list-item-title>
+            </v-list-item-content>
+          </template>
+        </template>
+    </v-autocomplete>
 </template>
 <script>
+import seoul from '@/assets/logo/seoul.jpg'
+import busan from '@/assets/logo/busan.png'
+import daegu from '@/assets/logo/daegu.png'
+import incheon from '@/assets/logo/incheon.png'
+import gwangju from '@/assets/logo/gwangju.png'
+import daejeon from '@/assets/logo/daejeon.png'
+import ulsan from '@/assets/logo/ulsan.png'
+import sejong from '@/assets/logo/sejong.png'
+import gyeonggi from '@/assets/logo/gyeonggi.png'
+import gangwon from '@/assets/logo/gangwon.jpg'
+import chungbuk from '@/assets/logo/chungbuk.png'
+import chungnam from '@/assets/logo/chungnam.png'
+import jeonbuk from '@/assets/logo/jeonbuk.jpg'
+import jeonnam from '@/assets/logo/jeonnam.png'
+import kyeongbuk from '@/assets/logo/kyeongbuk.jpg'
+import kyeongnam from '@/assets/logo/kyeongnam.png'
+import jeju from '@/assets/logo/jeju.jpg'
+
 export default {
     data() {
         return {
             title: true,
             items: [
-              '서울', '부산', '대구', '인천', '광주',' 대전','울산','세종','경기','강원','충북', '충남',
-              '전북', '전남', '경북', '경남', '제주'
+              {name: '서울', avatar: seoul},
+              {name: '부산', avatar: busan},
+              {name: '대구', avatar: daegu},
+              {name: '인천', avatar: incheon},
+              {name: '광주', avatar: gwangju},
+              {name: '대전', avatar: daejeon},
+              {name: '울산', avatar: ulsan},
+              {name: '세종', avatar: sejong},
+              {name: '경기', avatar: gyeonggi},
+              {name: '강원', avatar: gangwon},
+              {name: '충북', avatar: chungbuk},
+              {name: '충남', avatar: chungnam},
+              {name: '전북', avatar: jeonbuk},
+              {name: '전남', avatar: jeonnam},
+              {name: '경북', avatar: kyeongbuk},
+              {name: '경남', avatar: kyeongnam},
+              {name: '제주', avatar: jeju},
             ],
             model: null,
             sido: null,
