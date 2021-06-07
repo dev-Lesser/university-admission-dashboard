@@ -16,45 +16,55 @@
         <v-layout no-gutters wrap class="home-layout" v-else >
           <v-flex  xs12 sm8 md8 >
             <v-card class="pa-3" >
-              <bar-chart
+              <bar-chart v-if="title != '서울' & title !='경기' "
               :chartdata="statisticsChartData" 
               :options="barChartOptions" 
               :title="title+' (입학자수 - 입학정원)'" 
               :labels="label" 
-              class='bar-chart-graph' :height="436" />
+              class='bar-chart-graph' :height="heigthFirst*2" />
+              <div v-else>
+                <bar-chart 
+                :chartdata="statisticsChartData.slice(0,statisticsChartData.length/2)" 
+                :options="barChartOptionsMany" 
+                :title="title+' (입학자수 - 입학정원)'" 
+                :labels="label" 
+                class='bar-chart-graph' :height="heigthFirst" />
+                <bar-chart
+                :chartdata="statisticsChartData.slice(statisticsChartData.length/2)" 
+                :options="barChartOptionsMany" 
+                :title="title+' (입학자수 - 입학정원)'" 
+                :labels="label" 
+                class='bar-chart-graph' :height="heigthFirst" />
+              </div>
             </v-card>
           </v-flex>
-          <v-flex  xs6 sm2 md2 >
-            <v-card class="pa-3" >
+          <v-flex  xs12 sm4 md4 >
+            <v-card class="pa-3" height="620" >
               <analysis-info 
               :plusList="analysisData[0].labels.avgPlus" 
               :minusList="analysisData[0].labels.avgMinus"
               :lean="analysisData[0].lean[0]" />
               <pie-chart 
+              :height="250"
               :chartdata="analysisData[0].dataAvg" 
-              :options="barChartOptions" 
-              :title="title+' 행정구 분석 통계'" 
-              :labels="['평균변화율증가','평균변화율감소']" 
+              :options="pieChartOptions" 
+              :title="title+' 행정구 평균변화량 분석 통계'" 
+              :labels="['평균변화율증가 지역수','평균변화율감소 지역수']" 
               class='bar-chart-graph' />
-            </v-card>
-          </v-flex>
-          <v-flex  xs6 sm2 md2 >
-            <v-card class="pa-3" >
               <analysis-info 
               :plusList="analysisData[0].labels.recentPlus" 
               :minusList="analysisData[0].labels.recentMinus" 
               :lean="analysisData[0].lean[1]" />
 
               <pie-chart 
+              :height="250"
               :chartdata="analysisData[0].dataRecent" 
-              :options="barChartOptions" 
-              :title="title+' 행정구 분석 통계'" 
-              :labels="['최근변화율증가','최근변화율감소']" 
+              :options="pieChartOptions" 
+              :title="title+' 행정구 최근변화량 분석 통계'" 
+              :labels="['최근변화율증가 지역수','최근변화율감소 지역수']" 
               class='bar-chart-graph' />
             </v-card>
-            
           </v-flex>
-      
       
             <v-flex  xs12 sm4 md4 >
               <v-card class="pa-3"  >
@@ -67,29 +77,25 @@
                 
               </v-card>
           </v-flex>
-
-
-            <v-flex  xs12 sm4 md4 >
-              <v-card class="pa-3"  >
-                <bar-chart  
-                :chartdata="datasets.full" 
-                :options="barChartOptions" 
-                :title="title+' 입학정원'" 
-                :labels="label" 
-                class='bar-chart-graph' />
-              </v-card>
-
+            <v-flex  xs12 sm8 md8 >
+                <v-card class="pa-3"  height="424">
+                  <bar-chart  
+                  :chartdata="datasets.full" 
+                  :options="barChartOptionsMany" 
+                  :title="title+' 입학정원'" 
+                  :labels="label" 
+                  class='bar-raw-chart' />
+                  <bar-chart 
+                  :chartdata="datasets.number" 
+                  :options="barChartOptionsMany" 
+                  :title="title + ' 입학자수'" 
+                  :labels="label" 
+                  class='bar-raw-chart' />
+                </v-card>
             </v-flex>
-            <v-flex  xs12 sm4 md4 >
-              <v-card class="pa-3"  >
-                <bar-chart 
-                :chartdata="datasets.number" 
-                :options="barChartOptions" 
-                :title="title + ' 입학자수'" 
-                :labels="label" 
-                class='bar-chart-graph' />
-              </v-card>
-            </v-flex>
+            <!-- <v-flex  xs12 sm4 md4 >
+              
+            </v-flex> -->
         
             
           </v-layout>
@@ -125,11 +131,13 @@ export default {
   },
 
   data: () => ({
+    windowWidth: window.innerWidth,
     numberContents: '각 시도의 행정구역별 대학 입학자수 총합의 5년간 추이를 나타냅니다',
     rateContents:   '각 시도의 행정구역별 대학 입학정원 대비 입학자수(입학자수/입학정원)의 5년간 추이를 나타냅니다',
     fullContents:   '각 시도의 행정구역별 대학 입학정원 총합의 5년간 추이를 나타냅니다',
     label: [2016,2017,2018,2019,2020],
     showRaw: false,
+    heigthFirst: 298,
     }),
     
   mounted(){
@@ -203,9 +211,71 @@ export default {
           
       }
     },
+    barChartOptionsMany() {
+      return {
+          responsive: true,
+          maintainAspectRatio: false,
+          title: {
+              display: true,
+              text: this.title,
+          },
+          legend: {
+              position: 'bottom',
+              
+          },
+          tooltip: {
+              enabled: true
+          },
+          elements: {
+            line: {
+                tension: 0
+            }
+          },
+          scales: {
+            yAxes: [{
+                    display: true,
+                    ticks: {
+                        min: -1000,
+                        // steps: 1000,
+                        // stepValue: 500,
+                    }
+                }]
+          },
+          
+      }
+    },
+    pieChartOptions() {
+      return {
+          responsive: true,
+          maintainAspectRatio: false,
+          title: {
+              display: true,
+              text: this.title,
+          },
+          legend: {
+              position: 'bottom'
+          },
+          tooltip: {
+              enabled: true
+          },
+          elements: {
+            line: {
+                tension: 0
+            }
+        }
+          
+      }
+    }
     
   },
   watch:{
+    barChartOptionsMany: function(){
+      if (this.windowWidth<500){
+        this.barChartOptionsMany.legend.display = false;
+        this.heigthFirst = 200;
+      }
+      else this.barChartOptionsMany.legend.display = true;
+    },
       // statisticsChartData: function(val){
       // }
       analysisData: function(){
@@ -223,10 +293,7 @@ export default {
   justify-content: center;
 
 }
-.chart-graph{
-  /* height: 250px; */
-}
-.bar-chart-graph{
-  /* height: 250px; */
+.bar-raw-chart {
+  height: 184px;
 }
 </style>

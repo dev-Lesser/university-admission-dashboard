@@ -66,29 +66,31 @@ export default {
         return {
             title: true,
             items: [
-              {name: '서울', avatar: seoul},
-              {name: '부산', avatar: busan},
-              {name: '대구', avatar: daegu},
-              {name: '인천', avatar: incheon},
-              {name: '광주', avatar: gwangju},
-              {name: '대전', avatar: daejeon},
-              {name: '울산', avatar: ulsan},
-              {name: '세종', avatar: sejong},
-              {name: '경기', avatar: gyeonggi},
-              {name: '강원', avatar: gangwon},
-              {name: '충북', avatar: chungbuk},
-              {name: '충남', avatar: chungnam},
-              {name: '전북', avatar: jeonbuk},
-              {name: '전남', avatar: jeonnam},
-              {name: '경북', avatar: kyeongbuk},
-              {name: '경남', avatar: kyeongnam},
+              {name: '서울', avatar: seoul},{name: '부산', avatar: busan},
+              {name: '대구', avatar: daegu},{name: '인천', avatar: incheon},
+              {name: '광주', avatar: gwangju},{name: '대전', avatar: daejeon},
+              {name: '울산', avatar: ulsan},{name: '세종', avatar: sejong},
+              {name: '경기', avatar: gyeonggi},{name: '강원', avatar: gangwon},
+              {name: '충북', avatar: chungbuk},{name: '충남', avatar: chungnam},
+              {name: '전북', avatar: jeonbuk},{name: '전남', avatar: jeonnam},
+              {name: '경북', avatar: kyeongbuk},{name: '경남', avatar: kyeongnam},
               {name: '제주', avatar: jeju},
             ],
             model: null,
             sido: null,
-            colors: ['#E93B81', '#F5ABC9','#FFE5E2','#B6C9F0','#FBC6A4','#F4A9A8','#CE97B0','#AFB9CB',
-              '#907FA4', '#A58FAA','#A6D6D6', '#A7BBC7','#8E9775','#4A503D'
+            colors: ['#E93B81', '#F5ABC9','#B6C9F0','#FBC6A4','#CE97B0','#AFB9CB',
+              '#907FA4', '#A58F55','#A6D6D6', '#A7BBC7','#8E9775','#4A503D',
+              '#5E454B','#C84B31','#293B5F','#2F5D62','#2541B2','#E5D549','#0A81AB','#F98404',
+              '#867AE9', '#21094E','#907FA4','#34566D','#3D84BF'
             ],
+            fillcolors:['rgb(233, 59, 129, 0.6)','rgba(245, 171, 201, 0.6)',
+            'rgba(182, 201, 240, 0.6)','rgba(251, 198, 164, 0.6)','rgba(206, 151, 176, 0.6)',
+            'rgba(175, 185, 203, 0.6)','rgba(144, 127, 164, 0.6)','rgba(165, 143, 85, 0.8)','rgba(166, 214, 214, 0.6)',
+            'rgba(167, 187, 199, 0.6)','rgba(142, 151, 117, 0.6)','rgba(74, 80, 61, 0.6)',
+            'rgba(94, 69, 75, 0.6)','rgba(200, 75, 49, 0.6)','rgba(41, 59, 95, 0.6)','rgba(47, 93, 98, 0.6)',
+            'rgba(37, 65, 178, 0.6)','rgba(229, 213, 73, 0.6)','rgba(10, 129, 171, 0.6)','rgba(249, 132, 4, 0.6)',
+            'rgba(134, 122, 233, 0.6)','rgba(33, 9, 78, 0.8)', 'rgba(144, 127, 164, 0.8)','rgba(52, 86, 109, 0.8)','rgba(61, 132, 191, 0.8)'
+            ]
             
         }
     },
@@ -131,7 +133,7 @@ export default {
         for (var i in this.$store.state.resultData){
           this.$store.state.datasets['number'].push({
             borderColor: this.colors[i],
-            backgroundColor: this.colors[i],
+            backgroundColor: this.fillcolors[i],
             data: this.$store.state.resultData[i].data.number,
             label: this.$store.state.resultData[i].sigungu
           })
@@ -142,7 +144,7 @@ export default {
         for (var i in this.$store.state.resultData){
           this.$store.state.datasets.full.push({
             borderColor: this.colors[i],
-            backgroundColor: this.colors[i],
+            backgroundColor: this.fillcolors[i],
             data: this.$store.state.resultData[i].data.full,
             label: this.$store.state.resultData[i].sigungu
           })
@@ -186,8 +188,8 @@ export default {
           })
           this.$store.state.statisticsChartData.push({
               type: 'bar',
-              // borderColor: this.colors[i],
-              backgroundColor: this.colors[i],
+              borderColor: this.colors[i],
+              backgroundColor: this.fillcolors[i],
               data: this.$store.state.statisticsData[i].data,
               label: this.$store.state.statisticsData[i].sigungu
           })

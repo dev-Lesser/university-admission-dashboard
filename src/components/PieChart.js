@@ -18,7 +18,7 @@ export default {
             labels: this.labels,
             datasets: [
               {
-                backgroundColor: ['#005A8D','#FF96AD'],
+                backgroundColor: ['#00B5AA','#FF96AD'],
                 data: this.chartData
               }
             ],
