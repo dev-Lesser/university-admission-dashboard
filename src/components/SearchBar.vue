@@ -115,6 +115,9 @@ export default {
       },
       statisticsData(){
         return this.$store.state.statisticsData;
+      },
+      analysisData(){
+        return this.$store.state.analysisData
       }
     },
     watch: {
@@ -188,10 +191,51 @@ export default {
               label: this.$store.state.statisticsData[i].sigungu
           })
         }
+        var minusCountAvg = 0
+        var plusCountAvg= 0
+        var minusCountRecent =0
+        var plusCountRecent =0
+        var avgPlusArea=[], avgMinusArea=[];
+        var recentPlusArea=[], recentMinusArea  = [];
+        for (i in this.$store.state.statisticsData){
+            var data = this.$store.state.statisticsData[i].data;
+            var sigungu = this.$store.state.statisticsData[i].sigungu;
+            var leanAvg = data[0]-data[4] // 5년간 평균 변화율
+            var leanRecent = data[3]-data[4] // 1년간 변화율
+            if (leanAvg >0) { // 평균 변화율 감소 ? why?
+              minusCountAvg+=1
+              avgMinusArea.push(sigungu)
+            }
+            else {
+              plusCountAvg+=1
+              avgPlusArea.push(sigungu)
+            }
+            if (leanRecent >0) { // 평균 변화율 감소
+              minusCountRecent+=1
+              recentMinusArea.push(sigungu)
+            }
+            else {
+              plusCountRecent+=1
+              recentPlusArea.push(sigungu)
+            }
+
+        }
+        this.analysisData.push({
+          dataAvg: [plusCountAvg, minusCountAvg],
+          dataRecent: [plusCountRecent, minusCountRecent],
+          labels: {
+            avgPlus: avgPlusArea,
+            avgMinus: avgMinusArea,
+            recentPlus: recentPlusArea,
+            recentMinus: recentMinusArea
+          }
+        })
+        
       }
     },
     methods: {
       clearVariables(){
+        this.$store.state.analysisData =[]
         this.$store.state.statisticsData =[]
         this.$store.state.statisticsChartData = []
         this.$store.state.datasets = {

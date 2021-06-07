@@ -1,7 +1,6 @@
 <template>
   <v-app>
     <Header />
-
     <v-main>
       <v-container class="container" fluid  grid-list-sm>
         <v-layout no-gutters wrap class="home-layout">
@@ -12,18 +11,47 @@
       </v-container>
       <v-container fluid grid-list-md >
         <v-layout no-gutters wrap class="home-layout"  >
-          
-          <v-flex  xs12 sm12 md10 >
-              <v-card class="pa-3" >
-                <bar-chart v-if="selected" 
-                :chartdata="statisticsChartData" 
-                :options="barChartOptions" 
-                :title="title+' (입학자수 - 입학정원)'" 
-                :labels="label" 
-                class='bar-chart-graph' :height="100" />
-                <before-select v-else :contents="numberContents" />
-              </v-card>
-            </v-flex>
+          <v-flex  xs12 sm8 md8 >
+            <v-card class="pa-3" >
+              <bar-chart v-if="selected" 
+              :chartdata="statisticsChartData" 
+              :options="barChartOptions" 
+              :title="title+' (입학자수 - 입학정원)'" 
+              :labels="label" 
+              class='bar-chart-graph' :height="436" />
+              <before-select v-else :contents="numberContents" />
+            </v-card>
+          </v-flex>
+          <v-flex  xs6 sm2 md2 >
+            <v-card class="pa-3" >
+              <analysis-info v-if="selected" 
+              :plusList="analysisData[0].labels.avgPlus" 
+              :minusList="analysisData[0].labels.avgMinus" />
+              <pie-chart v-if="selected" 
+              :chartdata="analysisData[0].dataAvg" 
+              :options="barChartOptions" 
+              :title="title+' 행정구 분석 통계'" 
+              :labels="['평균변화율증가','평균변화율감소']" 
+              class='bar-chart-graph' />
+              
+            </v-card>
+          </v-flex>
+          <v-flex  xs6 sm2 md2 >
+            <v-card class="pa-3" >
+              <analysis-info v-if="selected" 
+              :plusList="analysisData[0].labels.recentPlus" 
+              :minusList="analysisData[0].labels.recentMinus" />
+
+              <pie-chart v-if="selected" 
+              :chartdata="analysisData[0].dataRecent" 
+              :options="barChartOptions" 
+              :title="title+' 행정구 분석 통계'" 
+              :labels="['최근변화율증가','최근변화율감소']" 
+              class='bar-chart-graph' />
+            </v-card>
+          </v-flex>
+      
+      
             <v-flex  xs12 sm12 md10 >
               <v-card class="pa-3" >
                 <line-chart v-if="selected" 
@@ -83,8 +111,10 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import LineChart from '@/components/LineChart.js'
 import BarChart from '@/components/BarChart.js'
+import PieChart from '@/components/PieChart.js'
 import BeforeSelect from '@/components/BeforeSelect'
 import data from '@/assets/data.json'
+import AnalysisInfo from '@/components/AnalysisInfo'
 export default {
   name: 'App',
 
@@ -94,7 +124,9 @@ export default {
     Footer,
     LineChart,
     BarChart,
-    BeforeSelect
+    PieChart,
+    BeforeSelect,
+    AnalysisInfo
   },
 
   data: () => ({
@@ -131,6 +163,9 @@ export default {
     },  
     statisticsChartData(){
       return this.$store.state.statisticsChartData;
+    },
+    analysisData(){
+      return this.$store.state.analysisData;
     },
   
     chartOptions() {
@@ -181,6 +216,8 @@ export default {
   watch:{
       // statisticsChartData: function(val){
       // }
+      analysisData: function(){
+      }
     }
 };
 </script>

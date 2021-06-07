@@ -17,7 +17,8 @@ export default new Vuex.Store({
     },
     title: '',
     statisticsData: [],
-    statisticsChartData: []
+    statisticsChartData: [],
+    analysisData: [],
   },
   mutations: {},
   actions: {},
