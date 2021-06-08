@@ -7,34 +7,46 @@
     style="display:flex;">
         <v-sheet
             class="text-center"
-            
         >
             <v-btn
-            class="mt-6"
+            class="ma-3"
             text
             color="red"
             @click="ReportSheetControl"
             >
             close
             </v-btn>
-            <v-layout wrap>
+            <v-divider />
+            <v-layout wrap style="margin-top:10px;">
                 <v-flex xs12 sm8 md8>
                     <network-chart :netNodes="netNodes" :netLinks="netLinks"/>
                 </v-flex>
                 <v-flex xs12 sm4 md4 style="align-items:center;display:grid;" id="cluster-icon">
+                    <div>
+                    <v-row no-gutters style="display:flex;" >
+                            <v-col class="desc-columns">
+                                <strong>색상</strong>
+                            </v-col >
+                            <v-col :md="2" class="desc-columns">
+                                <strong>패턴</strong>
+                            </v-col>
+                            <v-col class="desc-columns-left">
+                                <strong>패턴설명</strong>
+                            </v-col>
+                        </v-row>
+                    </div>
+                    <v-divider />
                     <div v-for="(i,key) in color" :key=i>
                         <v-row no-gutters >
-                            <v-col>
+                            <v-col >
                                 <v-chip class="ma-1" :color=i dark x-small >&nbsp;</v-chip> 
                             </v-col >
-                            <v-col :md="2" style="font-size:13px;display:flex;align-items:center;" >
+                            <v-col style="font-size:13px;display:flex;align-items:center;justify-content: center;">
                                 <v-img :src=clusterImg[key] :max-height="40" :max-width="40"/>
-                            </v-col>
-                            <v-col style="font-size:13px;display:flex;align-items:center;">
+                            </v-col >
+                            <v-col style="font-size:13px;display:flex;align-items:center;justify-content: center;">
                                 {{clusterContents[key]}} 
                             </v-col>
-                            
-                            
                         </v-row>
                         <v-divider />
                     </div>
@@ -59,7 +71,7 @@ export default {
             clusterGroup:null,
             color: ['#5A1846','#910D3F','#C70039','#A799B7','#FF5733','#FEC305'],
             clusterContents:[
-                '증가 성향', '감소 성향', 's파 패턴','역s파 패턴','최근 급증','최근 감소/중간 피크 성향'
+                '증가 성향', '감소 성향', 's파 패턴','역s파 패턴','최근 급증','최근감소/중간피크 성향'
             ],
             clusterImg: [p1,p2,p3,p4,p5,p6]
 
@@ -185,10 +197,18 @@ export default {
     justify-content: center;
     align-content: center;
 }
-@media screen and (min-width: 500px){
-    #cluster-icon {
-        display: none;
-    }
+.desc-columns{
+    font-size:13px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
+.desc-columns-left{
+    font-size:13px;
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+}
+
 
 </style>

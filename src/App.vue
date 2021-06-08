@@ -2,19 +2,20 @@
   <v-app>
     <Header />
     <v-main>
-      <v-container class="container" fluid  grid-list-sm>
+      <v-container fluid  >
         <v-layout no-gutters wrap class="home-layout">
-          <v-flex xs10 sm6 md6>
+          <v-flex xs8 sm6 md6>
             <search-bar />
           </v-flex>  
-          <v-flex xs1 sm1 md1 v-if="selected">
-            <v-btn class="ma-1" small @click="ReportSheetControl" >분석 군집화</v-btn>
+
+          <v-flex xs7 sm7 md7 v-if="selected" style="display:flex;justify-content:center;">
+            <v-btn class="ma-1" dark color="indigo darken-2" small @click="ReportSheetControl" >군집화 분석</v-btn>
           </v-flex>         
         </v-layout>
       </v-container>
       <v-container fluid grid-list-md >
         <v-layout no-gutters wrap class="home-layout"  v-if="!selected" >
-          <before-select :contents="numberContents" />
+          <before-select :contents="contents" />
         </v-layout>
         <v-layout no-gutters wrap class="home-layout" v-else >
           <v-flex  xs12 sm8 md8 >
@@ -134,9 +135,10 @@ export default {
 
   data: () => ({
     windowWidth: window.innerWidth,
-    numberContents: '각 시도의 행정구역별 대학 입학자수 총합의 5년간 추이를 나타냅니다',
-    rateContents:   '각 시도의 행정구역별 대학 입학정원 대비 입학자수(입학자수/입학정원)의 5년간 추이를 나타냅니다',
-    fullContents:   '각 시도의 행정구역별 대학 입학정원 총합의 5년간 추이를 나타냅니다',
+    contents: `각 시도의 행정구역별 대학의 최근 5년간의 입학자수, 입학정원 데이터를 분석하여, 
+    입학자수와 입학정원의 차이, 그 차이의 5년간의 평균, 최근 1년간의 평균의 지역별 분포 "파이차트"를 나타냅니다.
+    입학자수/입학정원의 매년 비율을 % 로 표현하고, 입학자수, 입학정원을 "막대그래프"로 표현합니다.
+    군집화 분석에서는 "클러스터링"으로 총 6개로 분류된 패턴을 가지고 서로 비슷한 경향의 추이라면 같은 색상 및 노드로 표현하는 "네트워크맵"을 구현하였습니다.`,
     label: [2016,2017,2018,2019,2020],
     showRaw: false,
     heigthFirst: 298,
@@ -298,8 +300,8 @@ export default {
   justify-content: center;
 }
 .home-layout{
-  /* display:flex; */
-  justify-content: center;
+  display:flex; 
+  justify-content: center
 
 }
 .bar-raw-chart {

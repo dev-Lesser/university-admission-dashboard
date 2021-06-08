@@ -319,16 +319,13 @@ export default {
                 result['sido']=sido
               }
             }
-          
         }
         if (result.insert) {
             this.$store.state.resultData.push(result);
         }
-        
-        
       }
     }
-    },
+  },
         
     
 }
