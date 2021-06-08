@@ -25,6 +25,7 @@
               :title="title+' (입학자수 - 입학정원)'" 
               :labels="label" 
               class='bar-chart-graph' :height="heigthFirst*2" />
+
               <div v-else>
                 <bar-chart 
                 :chartdata="statisticsChartData.slice(0,statisticsChartData.length/2)" 

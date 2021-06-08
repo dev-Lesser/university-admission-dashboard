@@ -37,8 +37,8 @@ export default {
 
         options(){
             return{
-                force: 600,
-                size:{ w:1000, h:300},
+                force: 550,
+                size:{ w:300, h:300},
                 nodeSize: this.nodeSize,
                 nodeLabels: true,
                 linkLabels: true,

@@ -1,5 +1,5 @@
 <template>
-    <v-bottom-sheet v-model="sheet" hide-overlay persistent style="overflow:scroll;">
+    <v-bottom-sheet v-model="sheet" hide-overlay persistent style="display:flex;">
         <v-sheet
             class="text-center"
             height="400px"
@@ -13,27 +13,51 @@
             close
             </v-btn>
             <v-layout wrap>
-            
-                <v-flex xs12 sm12 md12>
-                    <network-chart :netNodes="netNodes" :netLinks="netLinks"/>
-                </v-flex>
+            <v-flex xs6 sm8 md8>
+                <network-chart :netNodes="netNodes" :netLinks="netLinks"/>
+            </v-flex>
+            <v-flex xs6 sm3 md3 style="align-items:center;display:grid;" id="cluster-icon">
+                <div v-for="(i,key) in color" :key=i>
+                    <v-row no-gutters >
+                        <v-col>
+                            <v-chip class="ma-1" :color=i dark x-small >&nbsp;</v-chip> 
+                        </v-col >
+                        <v-col :md="2" style="font-size:13px;display:flex;align-items:center;" >
+                            <v-img :src=clusterImg[key] :max-height="40" :max-width="40"/>
+                        </v-col>
+                        <v-col style="font-size:13px;display:flex;align-items:center;">
+                            {{clusterContents[key]}} 
+                        </v-col>
+                        
+                        
+                    </v-row>
+                    <v-divider />
+                    </div>
+            </v-flex>
                 
             </v-layout>
-            
         </v-sheet>
     </v-bottom-sheet>
 </template>
 <script>
 import NetworkChart from '@/components/NetworkChart'
+import p1 from '@/assets/p1.png'
+import p2 from '@/assets/p2.png'
+import p3 from '@/assets/p3.png'
+import p4 from '@/assets/p4.png'
+import p5 from '@/assets/p5.png'
+import p6 from '@/assets/p6.png'
+
 export default {
     data() {
         return{
             sheet: true,
             clusterGroup:null,
-            color: ['#542E71','#FB3640','#FDCA40','#A799B7','#126E82','#91C788'],
+            color: ['#5A1846','#910D3F','#C70039','#A799B7','#FF5733','#FEC305'],
             clusterContents:[
-              '증가 성향', '감소 성향', 's파 패턴','역s파 패턴','최근 급증','최근 감소 또는 중간 피크 성향'
+                '증가 성향', '감소 성향', 's파 패턴','역s파 패턴','최근 급증','최근 감소/중간 피크 성향'
             ],
+            clusterImg: [p1,p2,p3,p4,p5,p6]
 
         }
     },
@@ -157,4 +181,10 @@ export default {
     justify-content: center;
     align-content: center;
 }
+@media screen and (min-width: 500px){
+    #cluster-icon {
+        display: none;
+    }
+}
+
 </style>
