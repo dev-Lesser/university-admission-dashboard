@@ -1,8 +1,13 @@
 <template>
-    <v-bottom-sheet v-model="sheet" hide-overlay persistent style="display:flex;">
+    <v-bottom-sheet 
+    v-model="sheet" 
+    hide-overlay 
+    scrollable
+    inset
+    style="display:flex;">
         <v-sheet
             class="text-center"
-            height="400px"
+            
         >
             <v-btn
             class="mt-6"
@@ -13,28 +18,27 @@
             close
             </v-btn>
             <v-layout wrap>
-            <v-flex xs6 sm8 md8>
-                <network-chart :netNodes="netNodes" :netLinks="netLinks"/>
-            </v-flex>
-            <v-flex xs6 sm3 md3 style="align-items:center;display:grid;" id="cluster-icon">
-                <div v-for="(i,key) in color" :key=i>
-                    <v-row no-gutters >
-                        <v-col>
-                            <v-chip class="ma-1" :color=i dark x-small >&nbsp;</v-chip> 
-                        </v-col >
-                        <v-col :md="2" style="font-size:13px;display:flex;align-items:center;" >
-                            <v-img :src=clusterImg[key] :max-height="40" :max-width="40"/>
-                        </v-col>
-                        <v-col style="font-size:13px;display:flex;align-items:center;">
-                            {{clusterContents[key]}} 
-                        </v-col>
-                        
-                        
-                    </v-row>
-                    <v-divider />
+                <v-flex xs12 sm8 md8>
+                    <network-chart :netNodes="netNodes" :netLinks="netLinks"/>
+                </v-flex>
+                <v-flex xs12 sm4 md4 style="align-items:center;display:grid;" id="cluster-icon">
+                    <div v-for="(i,key) in color" :key=i>
+                        <v-row no-gutters >
+                            <v-col>
+                                <v-chip class="ma-1" :color=i dark x-small >&nbsp;</v-chip> 
+                            </v-col >
+                            <v-col :md="2" style="font-size:13px;display:flex;align-items:center;" >
+                                <v-img :src=clusterImg[key] :max-height="40" :max-width="40"/>
+                            </v-col>
+                            <v-col style="font-size:13px;display:flex;align-items:center;">
+                                {{clusterContents[key]}} 
+                            </v-col>
+                            
+                            
+                        </v-row>
+                        <v-divider />
                     </div>
-            </v-flex>
-                
+                </v-flex>
             </v-layout>
         </v-sheet>
     </v-bottom-sheet>

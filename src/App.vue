@@ -96,8 +96,9 @@
                   class='bar-raw-chart' />
                 </v-card>
             </v-flex>
-            <analysis-report v-if="showReport"/>
+            
           </v-layout>
+          <analysis-report v-if="showReport"/>
       </v-container>
       
     </v-main>
