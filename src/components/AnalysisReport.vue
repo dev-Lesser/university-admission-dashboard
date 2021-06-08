@@ -3,53 +3,54 @@
     v-model="sheet" 
     hide-overlay 
     scrollable
-    inset
     style="display:flex;">
         <v-sheet
-            class="text-center"
+            class="text-center pb-5"
         >
-            <v-btn
-            class="ma-3"
-            text
-            color="red"
-            @click="ReportSheetControl"
-            >
-            close
-            </v-btn>
+            <div style="background-color:rgba(244,0,0,0.1);">
+                <v-btn
+                class="ma-3"
+                text
+                color="red"
+                @click="ReportSheetControl"
+                >
+                close
+                </v-btn>
+            </div>
             <v-divider />
-            <v-layout wrap style="margin-top:10px;">
-                <v-flex xs12 sm8 md8>
+            <v-layout wrap style="margin-top:10px;display: flex;justify-content: center;">
+                <v-flex xs12 sm6 md6>
                     <network-chart :netNodes="netNodes" :netLinks="netLinks"/>
                 </v-flex>
                 <v-flex xs12 sm4 md4 style="align-items:center;display:grid;" id="cluster-icon">
-                    <div>
-                    <v-row no-gutters style="display:flex;" >
-                            <v-col class="desc-columns">
-                                <strong>색상</strong>
-                            </v-col >
-                            <v-col :md="2" class="desc-columns">
-                                <strong>패턴</strong>
-                            </v-col>
-                            <v-col class="desc-columns-left">
-                                <strong>패턴설명</strong>
-                            </v-col>
-                        </v-row>
-                    </div>
+                        <div>
+                            <v-row no-gutters style="display:flex;" >
+                                <v-col class="desc-columns">
+                                    <strong>색상</strong>
+                                </v-col >
+                                <v-col :md="2" class="desc-columns">
+                                    <strong>패턴</strong>
+                                </v-col>
+                                <v-col class="desc-columns-left">
+                                    <strong>패턴설명</strong>
+                                </v-col>
+                            </v-row>
+                        </div>
                     <v-divider />
-                    <div v-for="(i,key) in color" :key=i>
-                        <v-row no-gutters >
-                            <v-col >
-                                <v-chip class="ma-1" :color=i dark x-small >&nbsp;</v-chip> 
-                            </v-col >
-                            <v-col style="font-size:13px;display:flex;align-items:center;justify-content: center;">
-                                <v-img :src=clusterImg[key] :max-height="40" :max-width="40"/>
-                            </v-col >
-                            <v-col style="font-size:13px;display:flex;align-items:center;justify-content: center;">
-                                {{clusterContents[key]}} 
-                            </v-col>
-                        </v-row>
-                        <v-divider />
-                    </div>
+                        <div v-for="(i,key) in color" :key=i>
+                            <v-row no-gutters >
+                                <v-col >
+                                    <v-chip class="ma-1" :color=i dark x-small >&nbsp;</v-chip> 
+                                </v-col >
+                                <v-col style="font-size:13px;display:flex;align-items:center;justify-content: center;">
+                                    <v-img :src=clusterImg[key] :max-height="40" :max-width="40"/>
+                                </v-col >
+                                <v-col style="font-size:13px;display:flex;align-items:center;justify-content: center;">
+                                    {{clusterContents[key]}} 
+                                </v-col>
+                            </v-row>
+                            <v-divider />
+                        </div>
                 </v-flex>
             </v-layout>
         </v-sheet>
@@ -69,7 +70,7 @@ export default {
         return{
             sheet: true,
             clusterGroup:null,
-            color: ['#5A1846','#910D3F','#C70039','#A799B7','#FF5733','#FEC305'],
+            color: ['#db5e56', '#d3db56', '#56db5e', '#56d3db', '#5e56db', '#db56d3'],
             clusterContents:[
                 '증가 성향', '감소 성향', 's파 패턴','역s파 패턴','최근 급증','최근감소/중간피크 성향'
             ],
@@ -209,6 +210,5 @@ export default {
     align-items:flex-start;
     justify-content:center;
 }
-
 
 </style>

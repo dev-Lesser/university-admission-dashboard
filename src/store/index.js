@@ -18,7 +18,7 @@ export default new Vuex.Store({
     title: '',
     statisticsData: [],
     statisticsChartData: [],
-    analysisData: [],
+    analysisData: [{labels:[]}],
     cluster: [],
     showReport: false,
     sortedData: {

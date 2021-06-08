@@ -9,7 +9,7 @@
           </v-flex>  
 
           <v-flex xs7 sm7 md7 v-if="selected" style="display:flex;justify-content:center;">
-            <v-btn class="ma-1" dark color="indigo darken-2" small @click="ReportSheetControl" >군집화 분석</v-btn>
+            <v-btn class="analysis-btn ma-1" dark color="indigo darken-2" small @click="ReportSheetControl" >군집화 분석</v-btn>
           </v-flex>         
         </v-layout>
       </v-container>
@@ -17,9 +17,11 @@
         <v-layout no-gutters wrap class="home-layout"  v-if="!selected" >
           <before-select :contents="contents" />
         </v-layout>
-        <v-layout no-gutters wrap class="home-layout" v-else >
+        <v-layout wrap class="home-layout" v-else >
+          
           <v-flex  xs12 sm8 md8 >
             <v-card class="pa-3" >
+              <v-card-subtitle>{{title}} 지역 5년간 행정구별 (입학자수 - 입학정원) 추이</v-card-subtitle>
               <bar-chart v-if="title != '서울' & title !='경기' "
               :chartdata="statisticsChartData" 
               :options="barChartOptions" 
@@ -44,7 +46,7 @@
             </v-card>
           </v-flex>
           <v-flex  xs12 sm4 md4 >
-            <v-card class="pa-3" height="620" >
+            <v-card class="pa-3" height="674" >
               <analysis-info 
               :plusList="analysisData[0].labels.avgPlus" 
               :minusList="analysisData[0].labels.avgMinus"
@@ -53,8 +55,8 @@
               :height="250"
               :chartdata="analysisData[0].dataAvg" 
               :options="pieChartOptions" 
-              :title="title+' 행정구 평균변화량 분석 통계'" 
-              :labels="['평균변화율증가 지역수','평균변화율감소 지역수']" 
+              :title="title+' 평균변화량 지역수 집계'" 
+              :labels="['5년 평균변화율증가 지역수','5년 평균변화율감소 지역수']" 
               class='bar-chart-graph' />
               <analysis-info 
               :plusList="analysisData[0].labels.recentPlus" 
@@ -65,12 +67,12 @@
               :height="250"
               :chartdata="analysisData[0].dataRecent" 
               :options="pieChartOptions" 
-              :title="title+' 행정구 최근변화량 분석 통계'" 
-              :labels="['최근변화율증가 지역수','최근변화율감소 지역수']" 
+              :title="title+' 최근변화량 지역수 집계'" 
+              :labels="['최근1년 변화율증가 지역수','최근1년 변화율감소 지역수']" 
               class='bar-chart-graph' />
             </v-card>
           </v-flex>
-            <v-flex  xs12 sm4 md4 >
+            <v-flex  xs12 sm5 md5 >
               <v-card class="pa-3"  >
                 <line-chart 
                 :chartdata="datasets.rate" 
@@ -81,20 +83,21 @@
                 
               </v-card>
           </v-flex>
-            <v-flex  xs12 sm8 md8 >
+            <v-flex  xs12 sm7 md7 >
                 <v-card class="pa-3"  height="424">
-                  <bar-chart  
-                  :chartdata="datasets.full" 
-                  :options="barChartOptionsMany" 
-                  :title="title+' 입학정원'" 
-                  :labels="label" 
-                  class='bar-raw-chart' />
                   <bar-chart 
                   :chartdata="datasets.number" 
                   :options="barChartOptionsMany" 
                   :title="title + ' 입학자수'" 
                   :labels="label" 
                   class='bar-raw-chart' />
+                  <bar-chart  
+                  :chartdata="datasets.full" 
+                  :options="barChartOptionsMany" 
+                  :title="title+' 입학정원'" 
+                  :labels="label" 
+                  class='bar-raw-chart' />
+                  
                 </v-card>
             </v-flex>
             
@@ -307,4 +310,20 @@ export default {
 .bar-raw-chart {
   height: 184px;
 }
+.analysis-btn{
+    animation-duration: 700ms;
+    animation-name: blink;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+@keyframes blink {
+   from {
+      opacity: 1;
+   }
+   to {
+      opacity: 0.5;
+   }
+ }
+
 </style>
