@@ -90,6 +90,9 @@ export default {
             'rgba(94, 69, 75, 0.6)','rgba(200, 75, 49, 0.6)','rgba(41, 59, 95, 0.6)','rgba(47, 93, 98, 0.6)',
             'rgba(37, 65, 178, 0.6)','rgba(229, 213, 73, 0.6)','rgba(10, 129, 171, 0.6)','rgba(249, 132, 4, 0.6)',
             'rgba(134, 122, 233, 0.6)','rgba(33, 9, 78, 0.8)', 'rgba(144, 127, 164, 0.8)','rgba(52, 86, 109, 0.8)','rgba(61, 132, 191, 0.8)'
+            ],
+            clusterContents:[
+              '증가 성향', '감소 성향', 's파 패턴','역s파 패턴','최근 급증','최근 감소 또는 중간 피크 성향'
             ]
             
         }
@@ -137,7 +140,9 @@ export default {
             data: this.$store.state.resultData[i].data.number,
             label: this.$store.state.resultData[i].sigungu
           })
+          
         }
+        
         this.$store.state.loading = false
       },
       fullData: function(){
@@ -162,7 +167,17 @@ export default {
               data    : statData,
               year    : this.fullData[i].year
             });
+
+          // ** TODO **
+          // 검색한 순간 한번만 해야함 // 지금 numberData, fullData, rateData가 값을 공유하고 있음 > 추후 수정 필요
+          // console.log(this.fullData[i].cluster)
+          this.$store.state.cluster.push({ // cluster 확인용 리스트
+            cluster: this.fullData[i].cluster,
+            contents: this.clusterContents[this.fullData[i].cluster],
+            sigungu: this.fullData[i].sigungu
+          })
         }
+        
         this.$store.state.loading = false
       },
       rateData: function(){
@@ -245,6 +260,8 @@ export default {
         this.$store.state.analysisData =[]
         this.$store.state.statisticsData =[]
         this.$store.state.statisticsChartData = []
+        this.$store.state.showReport = false
+        this.$store.state.cluster = []
         this.$store.state.datasets = {
               'rate': [],
               'full': [],
@@ -267,10 +284,11 @@ export default {
               'number': [], // 입학자수
               'full':   [], // 입학정원
               'rate':   [] // 비율 충원률
-            }
+            },
+            cluster: null // cluster 종류 설정 0~5 (0: 증가, 1:감소, 2 s파 3.역s파 4.최근 급증 5: 최근급감 또는 중간 피트)
           }
         for (var key in data){
-            if (data['시도'] == this.sido){ // 나중 선택시 바꾸는 식으로 함수 변경 필요
+            if (data['시도'] == this.sido){ 
               this.$store.state.title = this.sido
               result.insert = true;
               if (key=='index'){
@@ -293,6 +311,9 @@ export default {
                   result.data['rate'].push(data[key])
                 }
               }
+              else if (key == 'cluster_id'){
+                result.cluster= data[key]
+              }
               else{
                 var sido = data[key];
                 result['sido']=sido
@@ -302,7 +323,7 @@ export default {
         }
         if (result.insert) {
             this.$store.state.resultData.push(result);
-          }
+        }
         
         
       }

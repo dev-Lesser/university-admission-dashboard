@@ -6,6 +6,9 @@
         <v-layout no-gutters wrap class="home-layout">
           <v-flex xs10 sm6 md6>
             <search-bar />
+          </v-flex>  
+          <v-flex xs1 sm1 md1 v-if="selected">
+            <v-btn class="ma-1" small @click="ReportSheetControl" >분석 군집화</v-btn>
           </v-flex>         
         </v-layout>
       </v-container>
@@ -65,7 +68,6 @@
               class='bar-chart-graph' />
             </v-card>
           </v-flex>
-      
             <v-flex  xs12 sm4 md4 >
               <v-card class="pa-3"  >
                 <line-chart 
@@ -93,11 +95,7 @@
                   class='bar-raw-chart' />
                 </v-card>
             </v-flex>
-            <!-- <v-flex  xs12 sm4 md4 >
-              
-            </v-flex> -->
-        
-            
+            <analysis-report v-if="showReport"/>
           </v-layout>
       </v-container>
       
@@ -114,8 +112,9 @@ import LineChart from '@/components/LineChart.js'
 import BarChart from '@/components/BarChart.js'
 import PieChart from '@/components/PieChart.js'
 import BeforeSelect from '@/components/BeforeSelect'
-import data from '@/assets/data.json'
 import AnalysisInfo from '@/components/AnalysisInfo'
+import AnalysisReport from '@/components/AnalysisReport'
+import data from '@/assets/data_cluster.json'
 export default {
   name: 'App',
 
@@ -127,7 +126,8 @@ export default {
     BarChart,
     PieChart,
     BeforeSelect,
-    AnalysisInfo
+    AnalysisInfo,
+    AnalysisReport
   },
 
   data: () => ({
@@ -144,10 +144,15 @@ export default {
     this.$store.state.resultData = []
     this.$store.state.timeseriesData = data;
   },
-  
- 
+  methods:{
+    ReportSheetControl(){
+      this.$store.state.showReport = !this.$store.state.showReport
+    }
+  },
   computed:{
-    
+    showReport(){
+      return this.$store.state.showReport;
+    },
     selected(){
       return this.$store.state.selected;
     },
@@ -167,7 +172,9 @@ export default {
     analysisData(){
       return this.$store.state.analysisData;
     },
-  
+    clusterData(){
+      return this.$store.state.cluster;
+    },
     chartOptions() {
       return {
           responsive: true,
@@ -236,8 +243,8 @@ export default {
                     display: true,
                     ticks: {
                         min: -1000,
-                        // steps: 1000,
-                        // stepValue: 500,
+                        steps: 5,
+                        stepValue: 500,
                     }
                 }]
           },
