@@ -63,14 +63,7 @@
                 return this.color[number]
             },
             async makeGroupCluster() {
-                this.clusterGroup = [
-                    [],
-                    [],
-                    [],
-                    [],
-                    [],
-                    []
-                ]
+                this.clusterGroup = [[],[],[],[],[],[]]
                 for (var i in this.clusterData) {
                     if (this.clusterData[i].cluster == 0) {
                         this.clusterGroup[0].push(this.clusterData[i].sigungu)
