@@ -49,13 +49,13 @@
                 :options="barChartOptionsMany" 
                 :title="title+' (입학자수 - 입학정원)'" 
                 :labels="label" 
-                class='bar-chart-graph' :height="heigthFirst*1.3" />
+                class='bar-chart-graph' :height="heigthFirst*2" />
                 <bar-chart
                 :chartdata="statisticsChartData.slice(statisticsChartData.length/2)" 
                 :options="barChartOptionsMany" 
                 :title="title+' (입학자수 - 입학정원)'" 
                 :labels="label" 
-                class='bar-chart-graph' :height="heigthFirst*1.3" />
+                class='bar-chart-graph' :height="heigthFirst*2" />
               </div>
             </v-card>
           </v-flex>
@@ -93,7 +93,6 @@
           </v-flex>
             <v-flex  xs12 sm7 md7 >
               <v-card class="pa-3"  >
-                
                 <v-card-actions>
                   <v-card-subtitle>5년간의 충원률의 추이를 나타냅니다. 버튼을 눌러 군집별 패턴분석을 볼 수 있습니다.</v-card-subtitle>
                   <v-spacer />
@@ -333,6 +332,9 @@ export default {
     animation-name: blink;
     animation-iteration-count: infinite;
     animation-direction: alternate;
+}
+.chart-graph{
+  height: 500px;
 }
 
 @keyframes blink {
