@@ -17,7 +17,7 @@
         <v-layout wrap class="home-layout" v-else >
           <v-flex  xs12 sm7 md7 >
                 <v-card class="pa-3"  >
-                  <v-card-subtitle>{{this.title}} 지역별 입학자수 및 입학정원</v-card-subtitle>
+                  <v-card-subtitle>{{this.title}} 지역별 입학자수 및 입학정원을 보여줍니다.</v-card-subtitle>
                   <bar-chart 
                   :chartdata="datasets.number" 
                   :options="barChartOptionsMany" 
@@ -35,7 +35,7 @@
             </v-flex>
           <v-flex  xs12 sm7 md7 >
             <v-card class="pa-3" >
-              <v-card-subtitle>{{title}} 지역 5년간 행정구별 (입학자수 - 입학정원) 추이</v-card-subtitle>
+              <v-card-subtitle>{{title}} 지역 5년간 행정구별 (입학자수 - 입학정원) 추이를 보여줍니다.</v-card-subtitle>
               <bar-chart v-if="title != '서울' & title !='경기' "
               :chartdata="statisticsChartData" 
               :options="barChartOptions" 
@@ -49,18 +49,22 @@
                 :options="barChartOptionsMany" 
                 :title="title+' (입학자수 - 입학정원)'" 
                 :labels="label" 
-                class='bar-chart-graph' :height="heigthFirst" />
+                class='bar-chart-graph' :height="heigthFirst*1.3" />
                 <bar-chart
                 :chartdata="statisticsChartData.slice(statisticsChartData.length/2)" 
                 :options="barChartOptionsMany" 
                 :title="title+' (입학자수 - 입학정원)'" 
                 :labels="label" 
-                class='bar-chart-graph' :height="heigthFirst" />
+                class='bar-chart-graph' :height="heigthFirst*1.3" />
               </div>
             </v-card>
           </v-flex>
           <v-flex  xs12 sm7 md7 >
-            <v-card class="pa-3" height="674" >
+            <v-card class="pa-3"  >
+              <v-card-subtitle>
+                {{title}} 지역 5년간의 (입학자수 - 입학정원) 평균변화량과 최근1년간의  (입학자수 - 입학정원) 의 변화량을 분석하여
+                증가지역과 감소지역을 집계한 결과를 보여줍니다.
+                 </v-card-subtitle>
               <analysis-info 
               :plusList="analysisData ?analysisData[0].labels.avgPlus :'' " 
               :minusList="analysisData ?analysisData[0].labels.avgMinus : ''"
@@ -72,6 +76,7 @@
               :title="title+' 평균변화량 지역수 집계'" 
               :labels="['5년 평균변화율증가 지역수','5년 평균변화율감소 지역수']" 
               class='bar-chart-graph' />
+              <v-divider/>
               <analysis-info 
               :plusList="analysisData ?analysisData[0].labels.recentPlus : '' " 
               :minusList="analysisData ?analysisData[0].labels.recentMinus: '' " 
@@ -88,6 +93,16 @@
           </v-flex>
             <v-flex  xs12 sm7 md7 >
               <v-card class="pa-3"  >
+                
+                <v-card-actions>
+                  <v-card-subtitle>5년간의 충원률의 추이를 나타냅니다. 버튼을 눌러 군집별 패턴분석을 볼 수 있습니다.</v-card-subtitle>
+                  <v-spacer />
+                  <v-btn 
+                  @click="ReportSheetControl" 
+                  outlined 
+                  dark 
+                  color="purple darken-3"> <v-icon small>mdi-chart-bubble</v-icon>군집 분석</v-btn>
+                </v-card-actions>
                 <line-chart 
                 :chartdata="datasets.rate" 
                 :options="chartOptions" 
@@ -98,9 +113,8 @@
               </v-card>
           </v-flex>
           <v-flex xs12 sm7 md7 v-if="selected" style="display:flex;justify-content:center;">
-              <v-btn @click="ReportSheetControl" dark color="indigo darken-3"> 군집화 분석 결과 확인</v-btn>
-              <v-spacer />
-              <v-btn href="#top" outlined> 맨위로</v-btn>
+              
+              <v-btn href="#top" outlined ><v-icon class="mr-3" small>mdi-triangle</v-icon> 맨위로</v-btn>
           </v-flex> 
           <v-flex xs12 sm7 md7 v-if="selected" style="display:flex;justify-content:center;">
             <analysis-report v-if="showReport"/>
@@ -149,7 +163,7 @@ export default {
     군집화 분석에서는 "클러스터링"으로 총 6개로 분류된 패턴을 가지고 서로 비슷한 패턴이라면 같은 색상 및 노드로 표현하는 "네트워크맵"을 구현하였습니다.`,
     label: [2016,2017,2018,2019,2020],
     showRaw: false,
-    heigthFirst: 298,
+    heigthFirst: 248,
     }),
     
   mounted(){

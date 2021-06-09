@@ -1,11 +1,14 @@
 <template>
     <v-menu v-model="info_on" offset-y open-on-hover >
         <template v-slot:activator="{ on, attrs }">
+            <v-card-subtitle style="display:flex;align-items:center;">
             <v-btn v-bind="attrs" v-on="on" text icon >
-            <v-icon small dark>mdi-information-outline</v-icon>
+            <v-icon small dark>mdi-information-outline</v-icon> 
             </v-btn>
+            그래프 설명
+            </v-card-subtitle>
         </template>
-        <v-card width="300px" >
+        <v-card  >
             <v-card-subtitle>충원차이 변화량의 평균을 각 행정구별로 계산하여 집계합니다.</v-card-subtitle>
             <v-divider />
                 <v-card-subtitle class="explain_modal_head">변화율 평균</v-card-subtitle>
