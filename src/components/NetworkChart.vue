@@ -16,7 +16,7 @@ export default {
 
     data() {
         return {
-            nodeSize:15,
+            nodeSize:24,
             canvas:false,
             nodes: null,
             links: null,
@@ -37,7 +37,7 @@ export default {
 
         options(){
             return{
-                force: 550,
+                force: 450,
                 size:{ w:300, h:300},
                 nodeSize: this.nodeSize,
                 nodeLabels: true,
@@ -48,9 +48,7 @@ export default {
     },
     watch:{
         setForce: function(){
-            console(this.setForce)
-            if (this.nodeSize.length >20 ) this.$store.state.force = 600
-            console(this.setForce)
+            if (this.nodeSize.length >20 ) this.$store.state.force = 400
         }
     }
 

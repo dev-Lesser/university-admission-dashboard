@@ -1,16 +1,13 @@
 <template>
   <v-app>
     <Header />
-    <v-main>
+    <v-main id="top">
       <v-container fluid  >
         <v-layout no-gutters wrap class="home-layout">
           <v-flex xs8 sm6 md6>
             <search-bar />
           </v-flex>  
 
-          <v-flex xs7 sm7 md7 v-if="selected" style="display:flex;justify-content:center;">
-            <v-btn class="analysis-btn ma-1" dark color="indigo darken-2" small @click="ReportSheetControl" >군집화 분석</v-btn>
-          </v-flex>         
         </v-layout>
       </v-container>
       <v-container fluid grid-list-md >
@@ -18,8 +15,25 @@
           <before-select :contents="contents" />
         </v-layout>
         <v-layout wrap class="home-layout" v-else >
-          
-          <v-flex  xs12 sm8 md8 >
+          <v-flex  xs12 sm7 md7 >
+                <v-card class="pa-3"  >
+                  <v-card-subtitle>{{this.title}} 지역별 입학자수 및 입학정원</v-card-subtitle>
+                  <bar-chart 
+                  :chartdata="datasets.number" 
+                  :options="barChartOptionsMany" 
+                  :title="title + ' 입학자수'" 
+                  :labels="label" 
+                  class='bar-raw-chart' />
+                  <bar-chart  
+                  :chartdata="datasets.full" 
+                  :options="barChartOptionsMany" 
+                  :title="title+' 입학정원'" 
+                  :labels="label" 
+                  class='bar-raw-chart' />
+                  
+                </v-card>
+            </v-flex>
+          <v-flex  xs12 sm7 md7 >
             <v-card class="pa-3" >
               <v-card-subtitle>{{title}} 지역 5년간 행정구별 (입학자수 - 입학정원) 추이</v-card-subtitle>
               <bar-chart v-if="title != '서울' & title !='경기' "
@@ -45,34 +59,34 @@
               </div>
             </v-card>
           </v-flex>
-          <v-flex  xs12 sm4 md4 >
+          <v-flex  xs12 sm7 md7 >
             <v-card class="pa-3" height="674" >
               <analysis-info 
-              :plusList="analysisData[0].labels.avgPlus" 
-              :minusList="analysisData[0].labels.avgMinus"
-              :lean="analysisData[0].lean[0]" />
+              :plusList="analysisData ?analysisData[0].labels.avgPlus :'' " 
+              :minusList="analysisData ?analysisData[0].labels.avgMinus : ''"
+              :lean="analysisData ?analysisData[0].lean[0] : '' " />
               <pie-chart 
               :height="250"
-              :chartdata="analysisData[0].dataAvg" 
+              :chartdata="analysisData?analysisData[0].dataAvg:''" 
               :options="pieChartOptions" 
               :title="title+' 평균변화량 지역수 집계'" 
               :labels="['5년 평균변화율증가 지역수','5년 평균변화율감소 지역수']" 
               class='bar-chart-graph' />
               <analysis-info 
-              :plusList="analysisData[0].labels.recentPlus" 
-              :minusList="analysisData[0].labels.recentMinus" 
-              :lean="analysisData[0].lean[1]" />
+              :plusList="analysisData ?analysisData[0].labels.recentPlus : '' " 
+              :minusList="analysisData ?analysisData[0].labels.recentMinus: '' " 
+              :lean="analysisData ? analysisData[0].lean[1] : '' " />
 
               <pie-chart 
               :height="250"
-              :chartdata="analysisData[0].dataRecent" 
+              :chartdata="analysisData ?analysisData[0].dataRecent : '' " 
               :options="pieChartOptions" 
               :title="title+' 최근변화량 지역수 집계'" 
               :labels="['최근1년 변화율증가 지역수','최근1년 변화율감소 지역수']" 
               class='bar-chart-graph' />
             </v-card>
           </v-flex>
-            <v-flex  xs12 sm5 md5 >
+            <v-flex  xs12 sm7 md7 >
               <v-card class="pa-3"  >
                 <line-chart 
                 :chartdata="datasets.rate" 
@@ -83,26 +97,17 @@
                 
               </v-card>
           </v-flex>
-            <v-flex  xs12 sm7 md7 >
-                <v-card class="pa-3"  height="424">
-                  <bar-chart 
-                  :chartdata="datasets.number" 
-                  :options="barChartOptionsMany" 
-                  :title="title + ' 입학자수'" 
-                  :labels="label" 
-                  class='bar-raw-chart' />
-                  <bar-chart  
-                  :chartdata="datasets.full" 
-                  :options="barChartOptionsMany" 
-                  :title="title+' 입학정원'" 
-                  :labels="label" 
-                  class='bar-raw-chart' />
-                  
-                </v-card>
-            </v-flex>
+          <v-flex xs12 sm7 md7 v-if="selected" style="display:flex;justify-content:center;">
+              <v-btn @click="ReportSheetControl" dark color="indigo darken-3"> 군집화 분석 결과 확인</v-btn>
+              <v-spacer />
+              <v-btn href="#top" outlined> 맨위로</v-btn>
+          </v-flex> 
+          <v-flex xs12 sm7 md7 v-if="selected" style="display:flex;justify-content:center;">
+            <analysis-report v-if="showReport"/>
+          </v-flex>      
             
           </v-layout>
-          <analysis-report v-if="showReport"/>
+          
       </v-container>
       
     </v-main>
@@ -133,15 +138,15 @@ export default {
     PieChart,
     BeforeSelect,
     AnalysisInfo,
-    AnalysisReport
+    AnalysisReport,
   },
 
   data: () => ({
     windowWidth: window.innerWidth,
     contents: `각 시도의 행정구역별 대학의 최근 5년간의 입학자수, 입학정원 데이터를 분석하여, 
-    입학자수와 입학정원의 차이, 그 차이의 5년간의 평균, 최근 1년간의 평균의 지역별 분포 "파이차트"를 나타냅니다.
+    입학자수와 입학정원의 차이, 그 차이의 5년간의 평균, 최근 1년간의 평균의 지역별 분포 "파이차트"를 보여줍니다.
     입학자수/입학정원의 매년 비율을 % 로 표현하고, 입학자수, 입학정원을 "막대그래프"로 표현합니다.
-    군집화 분석에서는 "클러스터링"으로 총 6개로 분류된 패턴을 가지고 서로 비슷한 경향의 추이라면 같은 색상 및 노드로 표현하는 "네트워크맵"을 구현하였습니다.`,
+    군집화 분석에서는 "클러스터링"으로 총 6개로 분류된 패턴을 가지고 서로 비슷한 패턴이라면 같은 색상 및 노드로 표현하는 "네트워크맵"을 구현하였습니다.`,
     label: [2016,2017,2018,2019,2020],
     showRaw: false,
     heigthFirst: 298,
@@ -292,8 +297,7 @@ export default {
     },
       // statisticsChartData: function(val){
       // }
-      analysisData: function(){
-      }
+     
     }
 };
 </script>
@@ -308,7 +312,7 @@ export default {
 
 }
 .bar-raw-chart {
-  height: 184px;
+  height: 304px;
 }
 .analysis-btn{
     animation-duration: 700ms;
