@@ -18,7 +18,7 @@ export default new Vuex.Store({
     title: '',
     statisticsData: [],
     statisticsChartData: [],
-    analysisData: [{labels:[]}],
+    analysisData: [],
     cluster: [],
     showReport: false,
     sortedData: {
@@ -32,6 +32,9 @@ export default new Vuex.Store({
     netNodes: null,
     netLinks: null,
     force: 1000,
+    clusterData: [],
+    groupedData: []
+    // analysisData[0].labels.avgPlus
   },
   mutations: {},
   actions: {},
